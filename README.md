@@ -8,13 +8,24 @@ ReactJS, Redux, Redux-Thunk, React-Router, Typescript, NodeJS (ExpressJS), Mongo
 
 > https://spizz.herokuapp.com/
 
-## Quelques notes
+## Connexion (Utilisateurs)
 
-## Steps
+### Admins
+- Admin:
+	- Identifiant: admin@sp.com
+	- Mot de passe: root
+
+### Utilisateurs
+- User:
+	- Identifiant: user@mail.com
+	- Mot de passe: root
+
+## Quelques notes
 
 - Espace admin
 	- Mon espace (U) - Afficher les informations relatives au compte connecté
 	- Utilisateurs (CRUD) - Afficher la liste des utilisateurs
+		- Un admin peut créer un nouvel utilisateur admin
 	- Commandes (RUD) - Afficher la liste des commandes (Global)
 	- Pizza (CRUD) - Afficher la liste des pizzas
 	- Paramètres (RU) - Afficher la liste des paramètres
