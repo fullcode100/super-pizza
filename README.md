@@ -8,8 +8,6 @@ ReactJS, Redux, Redux-Thunk, React-Router, Typescript, NodeJS (ExpressJS), Mongo
 
 > https://spizz.herokuapp.com/
 
-No need token or authentification
-
 ## Quelques notes
 
 ## Steps
