@@ -1,0 +1,22 @@
+nav {
+	height: 85px;
+
+	a {
+		display: flex;
+		align-items: center;
+		align-content: center;
+
+		.navbar-brand {
+			text-transform: uppercase;
+			font-weight: bold;
+		}
+
+		&.nav-link {
+			cursor: pointer;
+		}
+
+		&.active {
+			font-weight: bold;
+		}
+	}
+}
