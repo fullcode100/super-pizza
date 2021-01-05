@@ -25,6 +25,7 @@ const MySpace = (props) => {
 			username: user.username,
 			email: user.email,
 			role: user.role,
+			password: "",
 		} as IUser);
 	};
 	const handleChange = (evt) => {

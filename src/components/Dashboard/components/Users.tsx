@@ -153,6 +153,8 @@ const Users = (props) => {
 						</thead>
 						<tbody>
 							{users.map((user: IUser, i) => {
+								const isAdmin = user.role === "Administrateur";
+
 								return (
 									<tr key={i}>
 										<td className="table-primary">
@@ -165,7 +167,7 @@ const Users = (props) => {
 											<div>{user.email}</div>
 										</td>
 										<td>
-											<div>{user.role}</div>
+											<div className={`btn-${isAdmin ? "danger" : "primary"}`}>{user.role}</div>
 										</td>
 										<td>
 											<div>{formatDate(user.created_at)}</div>
@@ -182,9 +184,11 @@ const Users = (props) => {
 													className="btn btn-secondary">
 													Modifier
 												</button>
-												<button type="button" onClick={() => handleDelete(user)} className="btn btn-danger">
-													Supprimer
-												</button>
+												{!isAdmin && (
+													<button type="button" onClick={() => handleDelete(user)} className="btn btn-danger">
+														Supprimer
+													</button>
+												)}
 											</div>
 										</td>
 									</tr>
@@ -251,7 +255,7 @@ const Users = (props) => {
 					</label>
 					<select value={values.role} onChange={handleChange} name="role" className="form-select" id="inputGroupSelect01">
 						<option>Choisir...</option>
-						<option value="Admininstrateur">Admininstrateur</option>
+						<option value="Administrateur">Administrateur</option>
 						<option value="Utilisateur">Utilisateur</option>
 					</select>
 				</div>

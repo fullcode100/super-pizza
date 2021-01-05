@@ -45,7 +45,7 @@ export const truncate = (str: string, limit, after) => {
 };
 
 export const isAdmin = (user: IUser): boolean => {
-	return user.role === "Admininstrateur";
+	return user.role === "Administrateur";
 };
 
 export const orderStatusTrans = {

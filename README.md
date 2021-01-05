@@ -8,15 +8,30 @@ ReactJS, Redux, Redux-Thunk, React-Router, Typescript, NodeJS (ExpressJS), Mongo
 
 > https://spizz.herokuapp.com/
 
-No need token or authentification
+## Connexion (Utilisateurs)
+
+### Admins
+- Admin:
+	- Identifiant: admin@sp.com
+	- Mot de passe: root
+
+### Utilisateurs
+- User:
+	- Identifiant: user@mail.com
+	- Mot de passe: root
+
+## Base de données
+
+> https://cloud.mongodb.com/
+
+DATABASE_SCREEN: https://drive.google.com/file/d/1X8Vnb_ZMiI2OATm6C-sYE-q-nwmDmPz9/view?usp=sharing
 
 ## Quelques notes
-
-## Steps
 
 - Espace admin
 	- Mon espace (U) - Afficher les informations relatives au compte connecté
 	- Utilisateurs (CRUD) - Afficher la liste des utilisateurs
+		- Un admin peut créer un nouvel utilisateur admin
 	- Commandes (RUD) - Afficher la liste des commandes (Global)
 	- Pizza (CRUD) - Afficher la liste des pizzas
 	- Paramètres (RU) - Afficher la liste des paramètres
@@ -28,7 +43,8 @@ No need token or authentification
 - Espace public
     - Chaque utilisateur à besoin d'un compte pour pouvoir passer une commande
     - Affichage des pizza (Nom, prix, image...)
-        - Ajouter au panier (S'il y a déja 4 (ou modifiable) commandes en cours, passer le status de la commande en 'waiting' avant l'enregistrement sinon le status est automatiquement mis en 'in_progress'")
+        - Ajouter au panier (S'il y a déja 4 (ou modifiable) commandes en cours, passer le status de la commande
+		en 'waiting' avant l'enregistrement sinon le status est automatiquement mis en 'in_progress'"). Si le 			status est à 'waiting', l'admin à la possibilité de le modifier manuellement depuis son espace.
         - Annule une commande (Depuis le panier)
         - Valider le panier (Depuis le panier)
 
@@ -64,3 +80,5 @@ yarn build:server (or npm run)
 yarn lint (or npm run)
 yarn lint:fix (or npm run)
 ```
+
+Don't forget to connect your mongo database before to start !!!
