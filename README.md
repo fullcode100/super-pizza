@@ -61,6 +61,7 @@ yarn dev:client (or npm run)
 ```
 yarn dev:server (or npm run)
 ```
+Don't forget to connect your mongo database before to start !!!
 
 #### Prod (client)
 
@@ -73,6 +74,7 @@ yarn build:client (or npm run)
 ```
 yarn build:server (or npm run)
 ```
+Don't forget to connect your mongo database before to start !!!
 
 ### Lints and fixes files
 
