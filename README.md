@@ -28,7 +28,8 @@ No need token or authentification
 - Espace public
     - Chaque utilisateur à besoin d'un compte pour pouvoir passer une commande
     - Affichage des pizza (Nom, prix, image...)
-        - Ajouter au panier (S'il y a déja 4 (ou modifiable) commandes en cours, passer le status de la commande en 'waiting' avant l'enregistrement sinon le status est automatiquement mis en 'in_progress'")
+        - Ajouter au panier (S'il y a déja 4 (ou modifiable) commandes en cours, passer le status de la commande
+		en 'waiting' avant l'enregistrement sinon le status est automatiquement mis en 'in_progress'"). Si le 			status est à 'waiting', l'admin à la possibilité de le modifier manuellement depuis son espace.
         - Annule une commande (Depuis le panier)
         - Valider le panier (Depuis le panier)
 
