@@ -20,6 +20,12 @@ ReactJS, Redux, Redux-Thunk, React-Router, Typescript, NodeJS (ExpressJS), Mongo
 	- Identifiant: user@mail.com
 	- Mot de passe: root
 
+## Base de données
+
+> https://cloud.mongodb.com/
+
+DATABASE_SCREEN: https://drive.google.com/file/d/1X8Vnb_ZMiI2OATm6C-sYE-q-nwmDmPz9/view?usp=sharing
+
 ## Quelques notes
 
 - Espace admin
