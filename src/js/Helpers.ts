@@ -1,5 +1,3 @@
-import Swal from "sweetalert2";
-
 import { IUser } from "src/interfaces/interfaces";
 
 export const createUUID = () => {
@@ -20,8 +18,11 @@ export const closeModal = () => {
 
 	document.body.classList.remove("modal-open");
 	document.body.style.paddingRight = "initial";
-	modalBackdrop && modalBackdrop.remove();
-	closeBtn.forEach((el) => (el as HTMLElement).click());
+	closeBtn.forEach((el, i) => {
+		el && (el as HTMLElement).click();
+		i >= closeBtn.length - 1 && modalBackdrop && modalBackdrop.remove();
+	});
+	closeBtn.length === 0 && modalBackdrop && modalBackdrop.remove();
 };
 
 export const getCurrentUser = (): IUser => {
@@ -80,20 +81,4 @@ export const formatDate = (dateStr: string) => {
 	const year = date.getFullYear();
 
 	return `${d}-${monthNames[month]}-${year}`;
-};
-
-export const signout = async (text: string = "Vous êtes déconnecté(e) !", cb: Function = () => {}) => {
-	window.localStorage.removeItem("token");
-	window.localStorage.removeItem("user");
-	return Swal.fire({
-		title: "Déconnexion",
-		text,
-		icon: "success",
-		confirmButtonText: "OK",
-	}).then((res) => {
-		if (res.isConfirmed) {
-			cb && cb();
-			window.location.href = "/";
-		}
-	});
 };

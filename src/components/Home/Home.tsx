@@ -34,7 +34,7 @@ const Home = (props) => {
 		<div id="home" className="container">
 			<h3>Liste des pizzas </h3>
 
-			<div className="row">
+			<div className="row" id="pizzas-container">
 				{pizzas.map((pizza: IPizza, i: number) => {
 					return (
 						<div key={i} className="col-4">

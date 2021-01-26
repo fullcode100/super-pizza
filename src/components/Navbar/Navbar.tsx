@@ -1,11 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useDispatch, connect } from "react-redux";
+import { connect } from "react-redux";
 import Swal from "sweetalert2";
 
 import axiosInstance from "../../js/Axios";
 import Modal from "../Modal/Modal";
-import { login, logout, removeFromCart } from "src/actions";
+import { login, clearCart, logout, removeFromCart } from "src/actions";
 import { closeModal } from "src/js/Helpers";
 
 import { IUser, IPizza, State } from "src/interfaces/interfaces";
@@ -20,7 +20,6 @@ const Navbar = (props) => {
 		email: "",
 		password: "",
 	} as any);
-	const dispatch = useDispatch();
 	const handleChange = (evt) => {
 		const value = evt.target.value;
 		const name = evt.target.name;
@@ -73,11 +72,10 @@ const Navbar = (props) => {
 			}
 			window.localStorage.setItem("token", token);
 			window.localStorage.setItem("user", JSON.stringify(user));
-			dispatch(login(user));
+			login(user);
 			closeModal();
 		}
 	};
-	const handleLogout = () => logout();
 	const total = cart.reduce((n, { price }) => n + price, "");
 	const handleOrder = async () => {
 		const pizzasIds = cart.map((c: IPizza) => c._id);
@@ -137,6 +135,11 @@ const Navbar = (props) => {
 								</NavLink>
 							</li>
 						)}
+						<li className="nav-item">
+							<NavLink exact to="/use-case" title="Accueil" className="nav-link">
+								Cas d'utilisation
+							</NavLink>
+						</li>
 					</ul>
 
 					<ul className="navbar-nav ml-auto">
@@ -266,7 +269,7 @@ const Navbar = (props) => {
 									</ul>
 								</li>
 								<li className="nav-item">
-									<a className="nav-link" onClick={handleLogout}>
+									<a className="nav-link" onClick={logout}>
 										Deconnexion
 									</a>
 								</li>
@@ -283,6 +286,6 @@ const mapStateToProps = (state: State) => ({
 	user: state.user,
 	cart: state.cart,
 });
-const mapDispatchToProps = { login, logout, removeFromCart };
+const mapDispatchToProps = { login, logout, clearCart, removeFromCart };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

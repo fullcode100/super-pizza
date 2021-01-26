@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
 import axiosInstance from "../js/Axios";
-import { isAdmin, signout } from "../js/Helpers";
+import { isAdmin } from "../js/Helpers";
 
 import {
 	SET_ORDERS,
@@ -22,6 +22,7 @@ import {
 	SET_SETTINGS,
 	ADD_TO_CART,
 	REMOVE_FROM_CART,
+	CLEAR_CART,
 } from "../constants/action-types";
 
 import { IOrder, IPizza, IUser } from "src/interfaces/interfaces";
@@ -84,24 +85,54 @@ export const login = (user: IUser, showModal: boolean = true) => {
 	};
 };
 
-export const logout = () => (dispatch) => {
-	axiosInstance().post("/logout");
-	signout("Vous êtes déconnecté(e) !", () => {
-		dispatch({ type: SET_LOGOUT });
-	});
+export const logout = () => async (dispatch) => {
+	await axiosInstance()
+		.post("/logout")
+		.then((response) => {
+			const data = response.data;
+
+			if (data.message === "User deconnected") {
+				window.localStorage.removeItem("token");
+				window.localStorage.removeItem("user");
+
+				dispatch({ type: SET_LOGOUT });
+				return Swal.fire({
+					title: "Déconnexion",
+					text: "Vous êtes déconnecté(e) !",
+					icon: "success",
+					confirmButtonText: "OK",
+				}).then((res) => {
+					if (res.isConfirmed) {
+						window.location.href = "/";
+					}
+				});
+			}
+		});
 };
 
 /* -------------------------------------------------------------------------- */
 /*                                   ORDERS                                   */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Add pizza to cart
+ */
 export const addToCart = (pizza: IPizza) => async (dispatch) => {
 	dispatch({
 		type: ADD_TO_CART,
 		pizza,
 	});
+	return Swal.fire({
+		title: "Info",
+		text: `${pizza.name} à été ajoutée au panier`,
+		icon: "info",
+		confirmButtonText: "OK",
+	});
 };
 
+/**
+ * Remove pizza from cart
+ */
 export const removeFromCart = (pizza: IPizza) => async (dispatch) => {
 	dispatch({
 		type: REMOVE_FROM_CART,
@@ -109,6 +140,19 @@ export const removeFromCart = (pizza: IPizza) => async (dispatch) => {
 	});
 };
 
+/**
+ * Clear cart
+ */
+export const clearCart = () => {
+	return {
+		type: CLEAR_CART,
+	};
+};
+
+/**
+ * Get orders list
+ * @param user
+ */
 export const getOrders = (user: IUser) => async (dispatch) => {
 	const path = !isAdmin(user) ? `/orders/${user._id}` : "/orders";
 
@@ -125,6 +169,9 @@ export const getOrders = (user: IUser) => async (dispatch) => {
 		});
 };
 
+/**
+ * Update an order
+ */
 export const updateOrder = (order: IOrder) => async (dispatch) => {
 	dispatch({
 		type: UPDATE_ORDER,
@@ -133,6 +180,9 @@ export const updateOrder = (order: IOrder) => async (dispatch) => {
 	setTimeout(() => dispatch(updateLoading("orders", false)), 600);
 };
 
+/**
+ * Delete order
+ */
 export const deleteOrder = (order: IOrder) => async (dispatch) => {
 	dispatch({
 		type: DELETE_ORDER,

@@ -223,7 +223,6 @@ Router.post("/registration", async (req, res) => {
 Router.post("/login", async (req, res) => {
 	const email: string = req.body.user.email;
 	const password: string = req.body.user.password;
-	let message = "User not exist";
 
 	await models.User.findOne({ email }, (err, user: IUser) => {
 		if (user) {
@@ -239,11 +238,11 @@ Router.post("/login", async (req, res) => {
 
 					return res.json({ message: "User logged in", user: u, token });
 				} else {
-					message = "Username or password not match";
+					return res.json({ message: "Username or password not match" });
 				}
 			});
 		} else {
-			return res.json({ message });
+			return res.json({ message: "User not exist" });
 		}
 	});
 	// }).select("-password");
@@ -301,7 +300,9 @@ Router.delete("/users/delete/:userId", authenticateToken, async (req, res) => {
 });
 
 Router.post("/logout", authenticateToken, (req, res) => {
-	return res.json({});
+	const message: string = "User deconnected";
+
+	return res.json({ message });
 });
 
 module.exports = Router;

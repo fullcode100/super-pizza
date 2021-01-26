@@ -87,7 +87,6 @@ const Users = (props) => {
 		}
 	};
 	const handleDelete = async (user: IUser) => {
-		dispatch(updateLoading("users", true));
 		return Swal.fire({
 			title: "Suppression",
 			text: `Vous êtes sure de vouloir supprimer l'utilisateur ${user.username} ?`,
@@ -98,6 +97,7 @@ const Users = (props) => {
 			confirmButtonText: "OK",
 		}).then(async (result) => {
 			if (result.isConfirmed) {
+				dispatch(updateLoading("users", true));
 				await axiosInstance()
 					.delete(`/users/delete/${user._id}`)
 					.then(() => {

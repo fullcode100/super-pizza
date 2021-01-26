@@ -1,5 +1,5 @@
 import React from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import Swal from "sweetalert2";
 
 import Modal from "src/components/Modal/Modal";
@@ -11,10 +11,9 @@ import { getCurrentUser, truncate, formatDate, closeModal, orderStatusTrans, isA
 import { State, IOrder } from "src/interfaces/interfaces";
 
 const Orders = (props) => {
-	const { loading, orders, user, updateOrder, getOrders } = props;
+	const { updateLoading, loading, orders, user, updateOrder, getOrders } = props;
 	const [values, setValues] = React.useState({ status: "" });
 	const [currentOrder, setCurrentOrder] = React.useState(null);
-	const dispatch = useDispatch();
 	const handleOrder = (order: IOrder) => {
 		setValues(order);
 		setCurrentOrder(order);
@@ -25,7 +24,7 @@ const Orders = (props) => {
 		setValues({ status: value });
 	};
 	const handleUpdate = async () => {
-		dispatch(updateLoading("orders", true));
+		// updateLoading("orders", true);
 
 		const response = await axiosInstance().put(`/orders/update/${currentOrder._id}`, {
 			...currentOrder,

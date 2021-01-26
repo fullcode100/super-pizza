@@ -15,6 +15,7 @@ import {
 	UPDATE_USER,
 	ADD_TO_CART,
 	REMOVE_FROM_CART,
+	CLEAR_CART,
 	UPDATE_ORDER,
 } from "../constants/action-types";
 
@@ -62,8 +63,9 @@ const rootReducer = (state = initialState, action) => {
 			orders,
 		};
 	} else if (action.type === UPDATE_ORDER) {
+		const { order } = action.payload;
 		const orders: IOrder[] = state.orders;
-		const index: number = orders.findIndex((p: IOrder) => p === action.payload.order);
+		const index: number = orders.findIndex((o: IOrder) => o._id === order._id);
 		orders[index] = action.payload.order;
 
 		return { ...state, orders };
@@ -71,8 +73,10 @@ const rootReducer = (state = initialState, action) => {
 		const cart: IPizza[] = [...state.cart, action.pizza];
 
 		return { ...state, cart };
+	} else if (action.type === CLEAR_CART) {
+		return { ...state, cart: [] };
 	} else if (action.type === REMOVE_FROM_CART) {
-		const cart = state.cart.filter((c) => c !== action.pizza);
+		const cart = state.cart.filter((c) => c._id !== action.pizza._id);
 
 		return { ...state, cart };
 	} else if (action.type === SET_PIZZAS) {
@@ -95,7 +99,7 @@ const rootReducer = (state = initialState, action) => {
 
 		return { ...state, pizzas };
 	} else if (action.type === DELETE_PIZZA) {
-		const pizzas = state.pizzas.filter((pizza) => pizza !== action.payload.pizza);
+		const pizzas = state.pizzas.filter((pizza) => pizza._id !== action.payload.pizza._id);
 
 		return { ...state, pizzas };
 	} else if (action.type === SET_LOGIN) {
@@ -117,7 +121,7 @@ const rootReducer = (state = initialState, action) => {
 
 		return { ...state, users };
 	} else if (action.type === DELETE_USER) {
-		const users = state.users.filter((user) => user !== action.payload.user);
+		const users = state.users.filter((user) => user._id !== action.payload.user._id);
 
 		return {
 			...state,

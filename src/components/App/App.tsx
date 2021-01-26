@@ -7,9 +7,10 @@ import Home from "../Home/Home";
 import Footer from "../Footer/Footer";
 import Loading from "src/components/Loading/Loading";
 import Dashboard from "src/components/Dashboard/Dashboard";
+import UseCase from "../UseCase/UseCase";
+
 import { login, updateLoading } from "src/actions";
 import { getCurrentUser } from "src/js/Helpers";
-
 import { State } from "src/interfaces/interfaces";
 
 const App = (props) => {
@@ -49,6 +50,7 @@ const App = (props) => {
 			<Switch>
 				<Route exact path={"/"} component={Home} />
 				<Route path={"/dashboard"} component={(props) => <Dashboard {...props} />} />
+				<Route path={"/use-case"} component={(props) => <UseCase {...props} />} />
 			</Switch>
 
 			<Footer />
