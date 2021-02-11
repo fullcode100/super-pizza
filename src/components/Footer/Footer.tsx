@@ -8,10 +8,10 @@ const Footer = () => {
 			<p>
 				<small>
 					<a target="_blank" href="https://gitlab.com/morelcisse/super-pizza">
-						CODE SOURCE
+						REPO GIT
 					</a>
 					<br />
-					Vous trouverez toutes les informations (y compris d'identification) sur le repo gitlab.
+					Vous y trouverez toutes les informations.
 				</small>
 			</p>
 		</footer>

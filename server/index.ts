@@ -6,7 +6,7 @@ import fileUpload from "express-fileupload";
 
 require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 
-import { dbConnect } from "./mongodb";
+import { dbConnect } from "./extras/mongodb";
 
 const app: Application = express();
 const dev: boolean = process.env.NODE_ENV === "development";
@@ -22,10 +22,10 @@ if (!dev) app.use(express.static(path.join(__dirname + "/../")));
 /* -------------------------------------------------------------------------- */
 /*                                   ROUTES                                   */
 /* -------------------------------------------------------------------------- */
-app.use(require("./routes"));
+app.use(require("./extras/routes"));
 /* -------------------------------------------------------------------------- */
 
-dbConnect().then(async () => {
+dbConnect().then(() => {
 	app.listen(port, () => console.log(`Server listen on PORT ${port}`));
 });
 

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import express, { Router as IRouter } from "express";
 import bcrypt from "bcrypt";
 
-import { dev } from "./index";
+import { dev } from "../index";
 import models from "./mongodb";
 import { authenticateToken, generateAccessToken } from "./jwt";
 import { deleteImg, hashPass, orderNumber, uploadImgPizza } from "./helpers";
@@ -11,15 +11,10 @@ const Router: IRouter = express.Router();
 /* -------------------------------------------------------------------------- */
 /*                                 INTERFACES                                 */
 /* -------------------------------------------------------------------------- */
-import { IOrder, IPizza, IUser } from "../src/interfaces/interfaces";
+import { IOrder, IPizza, IUser } from "../../src/interfaces/interfaces";
 /* -------------------------------------------------------------------------- */
 
 const saltRounds = 10;
-
-Router.use((req, res, next) => {
-	console.log("Time: ", Date.now());
-	next();
-});
 
 if (!dev) {
 	Router.get("/", (req, res) => {
@@ -31,6 +26,7 @@ if (!dev) {
 /*                                  SETTINGS                                  */
 /* -------------------------------------------------------------------------- */
 
+/** Get settings */
 Router.get("/settings", authenticateToken, async (req, res) => {
 	const message = "Success";
 	const settings = await models.Settings.find({}, (err: any, settings) => settings);
@@ -38,6 +34,7 @@ Router.get("/settings", authenticateToken, async (req, res) => {
 	return res.json({ message, settings });
 });
 
+/** Update settings */
 Router.put("/settings/update/:settingId", authenticateToken, async (req, res) => {
 	const setting = req.body.setting;
 	const name = setting.name;
@@ -52,6 +49,7 @@ Router.put("/settings/update/:settingId", authenticateToken, async (req, res) =>
 /*                                   PIZZAS                                   */
 /* -------------------------------------------------------------------------- */
 
+/** Get pizzas */
 Router.get("/pizzas", async (req, res) => {
 	const message = "Success";
 	const pizzas = await models.Pizza.find({}, (err: any, pizzas: IPizza[]) => pizzas);
@@ -59,6 +57,7 @@ Router.get("/pizzas", async (req, res) => {
 	return res.json({ message, pizzas });
 });
 
+/** Create pizza */
 Router.post("/pizzas/create", authenticateToken, async (req, res) => {
 	const body = req.body;
 	const name = body.name;
@@ -81,6 +80,7 @@ Router.post("/pizzas/create", authenticateToken, async (req, res) => {
 	});
 });
 
+/** Update pizza */
 Router.put("/pizzas/update/:pizzaId", authenticateToken, async (req, res) => {
 	const _id = new mongoose.Types.ObjectId(req.params.pizzaId);
 	const body = req.body;
@@ -97,6 +97,7 @@ Router.put("/pizzas/update/:pizzaId", authenticateToken, async (req, res) => {
 	if (data.n === 1) return res.json({ message, pizza: p });
 });
 
+/** Delete pizza */
 Router.delete("/pizzas/delete/:pizzaId", authenticateToken, async (req, res) => {
 	const _id = new mongoose.Types.ObjectId(req.params.pizzaId);
 	const message: string = "Pizza deleted";
@@ -114,6 +115,7 @@ Router.delete("/pizzas/delete/:pizzaId", authenticateToken, async (req, res) => 
 /*                                   ORDERS                                   */
 /* -------------------------------------------------------------------------- */
 
+/** Get orders */
 Router.get("/orders", authenticateToken, async (req, res) => {
 	const message = "Success";
 	const orders = await models.Order.find({}, (err: any, orders: IOrder[]) => orders)
@@ -126,6 +128,7 @@ Router.get("/orders", authenticateToken, async (req, res) => {
 	return res.json({ message, orders });
 });
 
+/** Get order by id */
 Router.get("/orders/:userId", authenticateToken, async (req, res) => {
 	const message = "Success";
 	const userId = new mongoose.Types.ObjectId(req.params.userId);
@@ -143,6 +146,7 @@ Router.get("/orders/:userId", authenticateToken, async (req, res) => {
 	});
 });
 
+/** Create order */
 Router.post("/orders/create", async (req, res) => {
 	const pizzasIds: string[] = req.body.pizzasIds;
 	const userId = req.body.userId;
@@ -166,6 +170,7 @@ Router.post("/orders/create", async (req, res) => {
 	});
 });
 
+/** Update order */
 Router.put("/orders/update/:orderId", authenticateToken, async (req, res) => {
 	const _id = new mongoose.Types.ObjectId(req.params.orderId);
 	const status: string = req.body.status;
@@ -193,6 +198,7 @@ Router.put("/orders/update/:orderId", authenticateToken, async (req, res) => {
 /*                              USERS & CONNECTION                            */
 /* -------------------------------------------------------------------------- */
 
+/** Get users */
 Router.get("/users", authenticateToken, async (req, res) => {
 	const message = "Success";
 	const users = await models.User.find({}, (err: any, users: IUser[]) => users).select("-password");
@@ -200,6 +206,7 @@ Router.get("/users", authenticateToken, async (req, res) => {
 	return res.json({ message, users });
 });
 
+/** Registration */
 Router.post("/registration", async (req, res) => {
 	const password = req.body.user.password;
 	const email = req.body.user.email;
@@ -220,6 +227,7 @@ Router.post("/registration", async (req, res) => {
 	});
 });
 
+/** Login */
 Router.post("/login", async (req, res) => {
 	const email: string = req.body.user.email;
 	const password: string = req.body.user.password;
@@ -245,9 +253,9 @@ Router.post("/login", async (req, res) => {
 			return res.json({ message: "User not exist" });
 		}
 	});
-	// }).select("-password");
 });
 
+/** Create user by admin */
 Router.post("/users/create", authenticateToken, async (req, res) => {
 	const password = req.body.user.password;
 	const email = req.body.user.email;
@@ -270,6 +278,7 @@ Router.post("/users/create", authenticateToken, async (req, res) => {
 	});
 });
 
+/** Update user by admin */
 Router.put("/users/update/:userId", authenticateToken, (req, res) => {
 	const _id = new mongoose.Types.ObjectId(req.params.userId);
 	const message: string = "User info updated";
@@ -290,6 +299,7 @@ Router.put("/users/update/:userId", authenticateToken, (req, res) => {
 	return response();
 });
 
+/** Delete user by admin */
 Router.delete("/users/delete/:userId", authenticateToken, async (req, res) => {
 	const _id = new mongoose.Types.ObjectId(req.params.userId);
 	const message: string = "User deleted";
@@ -299,6 +309,7 @@ Router.delete("/users/delete/:userId", authenticateToken, async (req, res) => {
 	return res.json({ message });
 });
 
+/** Logout */
 Router.post("/logout", authenticateToken, (req, res) => {
 	const message: string = "User deconnected";
 

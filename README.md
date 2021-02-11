@@ -2,7 +2,7 @@
 
 ## STACK
 
-ReactJS, Redux, Redux-Thunk, React-Router, Typescript, NodeJS (ExpressJS), Mongoose, Axios, SCSS, [...]
+ReactJS, Redux, Redux-Thunk, React-Router, Typescript, NodeJS (ExpressJS), Mongoose, Mongodb, Axios, SCSS, [...]
 
 ## LIVE DEMO
 
@@ -10,27 +10,27 @@ ReactJS, Redux, Redux-Thunk, React-Router, Typescript, NodeJS (ExpressJS), Mongo
 
 ## Identifications
 
-### Admin
+### Admins
 
--   Admin:
-    -   Identifiant: admin@sp.com
-    -   Mot de passe: root
+- **Email**: admin@sp.com
+- **Password**: root
 
-### Utilisateur
+### Users
 
--   User:
-    -   Identifiant: user@mail.com
-    -   Mot de passe: root
+ - **Email**: user@mail.com
+- **Password**: root
 
-## Base de données
+## Database
+
+You can create a account on mongodb cloud, it's free !
 
 > https://cloud.mongodb.com/
 
-DATABASE_SCREEN: https://drive.google.com/file/d/1X8Vnb_ZMiI2OATm6C-sYE-q-nwmDmPz9/view?usp=sharing
+SCREENSHOT: **[HERE](https://drive.google.com/file/d/1X8Vnb_ZMiI2OATm6C-sYE-q-nwmDmPz9/view?usp=sharing)**
 
-## Quelques notes
+## Notes
 
--   Espace admin
+-   **Espace admin**
 
     -   Mon espace (U) - Afficher les informations relatives au compte connecté
     -   Utilisateurs (CRUD) - Afficher la liste des utilisateurs
@@ -39,12 +39,12 @@ DATABASE_SCREEN: https://drive.google.com/file/d/1X8Vnb_ZMiI2OATm6C-sYE-q-nwmDmP
     -   Pizza (CRUD) - Afficher la liste des pizzas
     -   Paramètres (RU) - Afficher la liste des paramètres
 
--   Espace utilisateur
+-   **Espace utilisateur**
 
     -   Mon espace (U) - Afficher les informations relatives au compte connecté
     -   Commandes (RUD) - Afficher la liste des commandes
 
--   Espace public
+-   **Espace public**
     -   Chaque utilisateur à besoin d'un compte pour pouvoir passer une commande
     -   Affichage des pizza (Nom, prix, image...)
         -   Ajouter au panier (S'il y a déja 4 (ou modifiable) commandes en cours, passer le status de la commande
@@ -52,39 +52,38 @@ DATABASE_SCREEN: https://drive.google.com/file/d/1X8Vnb_ZMiI2OATm6C-sYE-q-nwmDmP
         -   Annule une commande (Depuis le panier)
         -   Valider le panier (Depuis le panier)
 
-## Project setup
+## Setup
+
+- Update var (**MONGODB_URI** & **DB_NAME**) in .env file (<[rootDir]>/server/.env)
+- Create root user with admin rôle in your database (users table)
 
 #### Dev (client)
 
 ```
-yarn dev:client (or npm run)
+yarn start:client (or npm run start:client)
 ```
 
 #### Dev (server)
 
 ```
-yarn dev:server (or npm run)
+yarn start:server (or npm run start:server)
 ```
-
-Don't forget to connect your mongo database before to start !!!
 
 #### Prod (client)
 
 ```
-yarn build:client (or npm run)
+yarn build:client (or npm run build:client)
 ```
 
 #### Prod (server)
 
 ```
-yarn build:server (or npm run)
+yarn build:server (or npm run build:server)
 ```
-
-Don't forget to connect your mongo database before to start !!!
 
 ### Lints and fixes files
 
 ```
-yarn lint (or npm run)
-yarn lint:fix (or npm run)
+yarn lint (or npm run lint)
+yarn lint:fix (or npm run lint:fix)
 ```

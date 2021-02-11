@@ -1,16 +1,6 @@
 {
+	"extends": "./tsconfig.base.json",
 	"compilerOptions": {
-		"outDir": "dist",
-		"baseUrl": ".",
-		"noImplicitAny": false,
-		"module": "CommonJS",
-		"target": "ES5",
-		"jsx": "react",
-		"esModuleInterop": true,
-		"allowJs": true,
-		"moduleResolution": "node",
-		"allowSyntheticDefaultImports": true
-	},
-	"include": ["src/**/*", "server/**/*"],
-	"exclude": ["./node_modules"]
+		"jsx": "react"
+	}
 }
