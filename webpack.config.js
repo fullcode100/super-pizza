@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
@@ -8,7 +9,7 @@ const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 // ----
 const APP_DIR = path.resolve(__dirname, "src");
-const DEV_DIR = path.resolve(__dirname, "public");
+const PUBLIC_DIR = path.resolve(__dirname, "public");
 const BUILD_DIR = path.resolve(__dirname, "dist");
 const dev = process.env.NODE_ENV === "development";
 const publicPath = dev ? "http://localhost:8080/" : "https://spizz.herokuapp.com/";
@@ -59,7 +60,7 @@ const Config = {
 	},
 	entry: { main: ["@babel/polyfill", "react-hot-loader/patch", `${APP_DIR}/index.tsx`] },
 	devServer: {
-		contentBase: DEV_DIR,
+		contentBase: PUBLIC_DIR,
 		publicPath,
 		historyApiFallback: true,
 		hot: true,
@@ -68,13 +69,6 @@ const Config = {
 		port: 8080,
 	},
 	devtool: dev ? "eval-cheap-module-source-map" : "none",
-	output: {
-		filename: "[name].js",
-		path: dev ? DEV_DIR : BUILD_DIR,
-		publicPath,
-		pathinfo: false,
-		chunkFilename: "chunks/[id].chunk.js",
-	},
 	module: {
 		rules: [
 			{
@@ -112,9 +106,10 @@ const Config = {
 	mode: !dev ? "production" : "development",
 	output: {
 		filename: "[name].js",
-		path: dev ? DEV_DIR : BUILD_DIR,
+		path: dev ? PUBLIC_DIR : BUILD_DIR,
 		publicPath,
 		pathinfo: false,
+		chunkFilename: "chunks/[id].chunk.js",
 	},
 	target: "web",
 	optimization: {},
