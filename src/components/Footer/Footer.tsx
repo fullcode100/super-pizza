@@ -1,5 +1,3 @@
-import React from "react";
-
 import "./Footer.scss";
 
 const Footer = () => {
@@ -7,7 +5,7 @@ const Footer = () => {
 		<footer>
 			<p>
 				<small>
-					<a target="_blank" href="https://gitlab.com/morelcisse/super-pizza">
+					<a target="_blank" rel="noreferrer" href="https://gitlab.com/morelcisse/super-pizza">
 						REPO GIT
 					</a>
 					<br />

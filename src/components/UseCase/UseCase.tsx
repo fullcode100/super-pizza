@@ -1,5 +1,3 @@
-import React from "react";
-
 import "./UseCase.scss";
 
 const UseCase = () => {

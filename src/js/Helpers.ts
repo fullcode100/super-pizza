@@ -6,7 +6,7 @@ export const createUUID = () => {
 		const r = (dt + Math.random() * 16) % 16 | 0;
 		dt = Math.floor(dt / 16);
 
-		return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+		return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
 	});
 
 	return uuid;
@@ -19,10 +19,11 @@ export const closeModal = () => {
 	document.body.classList.remove("modal-open");
 	document.body.style.paddingRight = "initial";
 	closeBtn.forEach((el, i) => {
-		el && (el as HTMLElement).click();
-		i >= closeBtn.length - 1 && modalBackdrop && modalBackdrop.remove();
+		if (el) (el as HTMLElement).click();
+		if (i >= closeBtn.length - 1 && modalBackdrop) modalBackdrop.remove();
 	});
-	closeBtn.length === 0 && modalBackdrop && modalBackdrop.remove();
+
+	if (closeBtn.length === 0 && modalBackdrop) modalBackdrop.remove();
 };
 
 export const getCurrentUser = (): IUser => {
@@ -40,7 +41,7 @@ const replace = (str: string) => str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/
 export const truncate = (str: string, limit, after) => {
 	let content: any = replace(str);
 	content = content.split(" ").slice(0, limit);
-	content = content.join(" ") + (after ? after : "");
+	content = content.join(" ") + (after || "");
 
 	return content;
 };

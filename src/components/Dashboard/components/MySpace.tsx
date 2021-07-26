@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
@@ -11,14 +11,14 @@ import Loading from "src/components/Loading/Loading";
 import { IUser, State } from "src/interfaces/interfaces";
 
 const MySpace = (props) => {
-	const { loading, login, user } = props;
+	const { loading, user } = props;
 	const init = {
 		username: "",
 		email: "",
 		password: "",
 		role: "",
 	};
-	const [values, setValues] = React.useState(init);
+	const [values, setValues] = useState(init);
 	const dispatch = useDispatch();
 	const handleUser = () => {
 		setValues({
@@ -29,21 +29,21 @@ const MySpace = (props) => {
 		} as IUser);
 	};
 	const handleChange = (evt) => {
-		const value = evt.target.value;
-		const name = evt.target.name;
+		const { value } = evt.target;
+		const { name } = evt.target;
 
 		setValues({ ...values, [name]: value });
 	};
 	const handleUpdate = async () => {
 		dispatch(updateLoading("users", true));
 
-		const response = await axiosInstance().put(`/users/update/${user._id}`, values);
-		const data = response.data;
-		const message = data.message;
+		const response = await axiosInstance().put(`/users/update/${user["_id"]}`, values);
+		const { data } = response;
+		const { message } = data;
 
 		if (message === "User info updated") {
-			login(values);
-			return Swal.fire({
+			dispatch(login(values));
+			Swal.fire({
 				title: "Succès",
 				text: "Vos infos ont bien été modifiée avec succès.",
 				icon: "success",
@@ -113,7 +113,7 @@ const MySpace = (props) => {
 								</tbody>
 							</table>
 
-							<Modal id="userSpaceModal" title={"Modifier vos infos"} buttonName={"Modifier"} handleValid={handleUpdate}>
+							<Modal id="userSpaceModal" title="Modifier vos infos" buttonName="Modifier" handleValid={handleUpdate}>
 								<div className="input-group mt-4 mb-4">
 									<input
 										value={values.username}
@@ -164,6 +164,6 @@ const mapStateToProps = (state: State) => ({
 	user: state.user,
 	loading: state.loading.user,
 });
-const mapDispatchToProps = { login };
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MySpace);

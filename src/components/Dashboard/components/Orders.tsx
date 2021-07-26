@@ -1,45 +1,46 @@
-import React from "react";
-import { connect } from "react-redux";
+import { Fragment, useEffect, useState } from "react";
+import { useDispatch, connect } from "react-redux";
 import Swal from "sweetalert2";
 
 import Modal from "src/components/Modal/Modal";
 import Loading from "src/components/Loading/Loading";
 import axiosInstance from "src/js/Axios";
-import { getOrders, deleteOrder, updateOrder, updateLoading } from "src/actions";
+import { getOrders, updateOrder } from "src/actions";
 import { getCurrentUser, truncate, formatDate, closeModal, orderStatusTrans, isAdmin } from "src/js/Helpers";
 
 import { State, IOrder } from "src/interfaces/interfaces";
 
 const Orders = (props) => {
-	const { updateLoading, loading, orders, user, updateOrder, getOrders } = props;
-	const [values, setValues] = React.useState({ status: "" });
-	const [currentOrder, setCurrentOrder] = React.useState(null);
+	const { loading, orders, user } = props;
+	const [values, setValues] = useState({ status: "" });
+	const [currentOrder, setCurrentOrder] = useState(null);
 	const handleOrder = (order: IOrder) => {
 		setValues(order);
 		setCurrentOrder(order);
 	};
+	const dispatch = useDispatch();
 	const handleChange = (evt) => {
-		const value = evt.target.value;
+		const { value } = evt.target;
 
 		setValues({ status: value });
 	};
 	const handleUpdate = async () => {
-		// updateLoading("orders", true);
-
-		const response = await axiosInstance().put(`/orders/update/${currentOrder._id}`, {
+		const response = await axiosInstance().put(`/orders/update/${currentOrder["_id"]}`, {
 			...currentOrder,
 			status: values.status,
 		});
-		const data = response.data;
-		const message = data.message;
+		const { data } = response;
+		const { message } = data;
 
 		if (message === "Order info updated") {
-			updateOrder({
-				...currentOrder,
-				status: values.status,
-			});
+			dispatch(
+				updateOrder({
+					...currentOrder,
+					status: values.status,
+				})
+			);
 			closeModal();
-			return Swal.fire({
+			Swal.fire({
 				title: "Succès",
 				text: "Le status de la commande à bien été modifiée avec succès.",
 				icon: "success",
@@ -51,8 +52,8 @@ const Orders = (props) => {
 	};
 	const displayIfAdmin: boolean = user && isAdmin(user);
 
-	React.useEffect(() => {
-		getOrders(getCurrentUser());
+	useEffect(() => {
+		dispatch(getOrders(getCurrentUser()));
 	}, []);
 
 	if (loading) return <Loading />;
@@ -77,10 +78,12 @@ const Orders = (props) => {
 						</thead>
 						<tbody>
 							{orders.map((order: IOrder, i) => {
-								const names = order.pizzas.map((op) => op["name"]) + ", ";
+								const names = `${order.pizzas.map((op) => op["name"])}, `;
+
+								if (!order.user) return <Fragment key={order.n_order} />;
 
 								return (
-									<tr key={i}>
+									<tr key={order.n_order}>
 										<td className="table-primary">
 											<div>{i + 1}</div>
 										</td>
@@ -127,7 +130,7 @@ const Orders = (props) => {
 				)}
 			</div>
 
-			<Modal id="orderModal" title={`Modifier le status`} buttonName="Modifier" handleValid={handleUpdate}>
+			<Modal id="orderModal" title="Modifier le status" buttonName="Modifier" handleValid={handleUpdate}>
 				<div className="input-group mb-4">
 					<label className="input-group-text" htmlFor="inputGroupSelect01">
 						Status
@@ -153,6 +156,6 @@ const mapStateToProps = (state: State) => ({
 	orders: state.orders,
 	user: state.user,
 });
-const mapDispatchToProps = { getOrders, deleteOrder, updateOrder, updateLoading };
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Orders);

@@ -33,11 +33,9 @@ const axiosInstance = (config: AxiosRequestConfig = {}) => {
 		(error) => {
 			// console.warn("Error status", error.response.status);
 			// return Promise.reject(error)
-			if (error.response) {
-				return error.response.data;
-			} else {
-				return Promise.reject(error);
-			}
+			if (error.response) return error.response.data;
+
+			return Promise.reject(error);
 		}
 	);
 

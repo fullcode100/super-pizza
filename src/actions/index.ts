@@ -1,5 +1,6 @@
 import Swal from "sweetalert2";
 
+import { IOrder, IPizza, IUser } from "src/interfaces/interfaces";
 import axiosInstance from "../js/Axios";
 import { isAdmin } from "../js/Helpers";
 
@@ -24,8 +25,6 @@ import {
 	REMOVE_FROM_CART,
 	CLEAR_CART,
 } from "../constants/action-types";
-
-import { IOrder, IPizza, IUser } from "src/interfaces/interfaces";
 
 /* -------------------------------------------------------------------------- */
 /*                                    USERS                                   */
@@ -60,7 +59,7 @@ export const getUsers = () => async (dispatch) => {
 	await axiosInstance()
 		.get("/users")
 		.then(({ data }) => {
-			const users: IUser[] = data.users;
+			const { users } = data;
 
 			dispatch({
 				type: SET_USERS,
@@ -70,13 +69,15 @@ export const getUsers = () => async (dispatch) => {
 };
 
 export const login = (user: IUser, showModal: boolean = true) => {
-	showModal &&
+	if (showModal) {
 		Swal.fire({
 			title: "Connexion",
 			text: "Vous êtes authentifié(e) !",
 			icon: "success",
 			confirmButtonText: "OK",
 		});
+	}
+
 	window.localStorage.setItem("user", JSON.stringify(user));
 
 	return {
@@ -89,14 +90,14 @@ export const logout = () => async (dispatch) => {
 	await axiosInstance()
 		.post("/logout")
 		.then((response) => {
-			const data = response.data;
+			const { data } = response;
 
 			if (data.message === "User deconnected") {
 				window.localStorage.removeItem("token");
 				window.localStorage.removeItem("user");
 
 				dispatch({ type: SET_LOGOUT });
-				return Swal.fire({
+				Swal.fire({
 					title: "Déconnexion",
 					text: "Vous êtes déconnecté(e) !",
 					icon: "success",
@@ -160,7 +161,7 @@ export const getOrders = (user: IUser) => async (dispatch) => {
 	await axiosInstance()
 		.get(path)
 		.then(({ data }) => {
-			const orders: IOrder[] = data.orders;
+			const { orders } = data;
 
 			dispatch({
 				type: SET_ORDERS,
@@ -200,7 +201,7 @@ export const getPizzas = () => async (dispatch) => {
 	await axiosInstance()
 		.get("/pizzas")
 		.then(({ data }) => {
-			const pizzas: IPizza[] = data.pizzas;
+			const { pizzas } = data;
 
 			dispatch({
 				type: SET_PIZZAS,
@@ -247,11 +248,11 @@ export const updateLoading = (key: string, value: boolean) => {
 /*                                  SETTINGS                                  */
 /* -------------------------------------------------------------------------- */
 
-export const getSettings = (settings) => async (dispatch) => {
+export const getSettings = () => async (dispatch) => {
 	await axiosInstance()
 		.get("/settings")
 		.then(({ data }) => {
-			const settings: IPizza[] = data.settings;
+			const { settings } = data;
 
 			dispatch({
 				type: SET_SETTINGS,

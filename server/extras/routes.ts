@@ -6,19 +6,19 @@ import { dev } from "../index";
 import models from "./mongodb";
 import { authenticateToken, generateAccessToken } from "./jwt";
 import { deleteImg, hashPass, orderNumber, uploadImgPizza } from "./helpers";
-
-const Router: IRouter = express.Router();
 /* -------------------------------------------------------------------------- */
 /*                                 INTERFACES                                 */
 /* -------------------------------------------------------------------------- */
 import { IOrder, IPizza, IUser } from "../../src/interfaces/interfaces";
+
+const Router: IRouter = express.Router();
 /* -------------------------------------------------------------------------- */
 
 const saltRounds = 10;
 
 if (!dev) {
 	Router.get("/", (req, res) => {
-		res.sendFile("./index.html", { root: __dirname + "/../" });
+		res.sendFile("./index.html", { root: `${__dirname}/../` });
 	});
 }
 
@@ -29,20 +29,21 @@ if (!dev) {
 /** Get settings */
 Router.get("/settings", authenticateToken, async (req, res) => {
 	const message = "Success";
-	const settings = await models.Settings.find({}, (err: any, settings) => settings);
+	// no-shadow
+	const settings = await models.Settings.find({}, (err: any, s) => s);
 
 	return res.json({ message, settings });
 });
 
 /** Update settings */
 Router.put("/settings/update/:settingId", authenticateToken, async (req, res) => {
-	const setting = req.body.setting;
-	const name = setting.name;
+	const { setting } = req.body;
+	const { name } = setting;
 	const _id = new mongoose.Types.ObjectId(req.params.settingId);
-	let message: string = "Setting updated";
+	const message: string = "Setting updated";
 	const data = await models.Settings.updateOne({ _id }, { $set: { [name]: setting[name] } }, { upsert: true });
 
-	if (data.n === 1) return res.json({ message });
+	if (data.n === 1) res.json({ message });
 });
 
 /* -------------------------------------------------------------------------- */
@@ -52,16 +53,16 @@ Router.put("/settings/update/:settingId", authenticateToken, async (req, res) =>
 /** Get pizzas */
 Router.get("/pizzas", async (req, res) => {
 	const message = "Success";
-	const pizzas = await models.Pizza.find({}, (err: any, pizzas: IPizza[]) => pizzas);
+	const pizzas = await models.Pizza.find({}, (err: any, p: IPizza[]) => p);
 
 	return res.json({ message, pizzas });
 });
 
 /** Create pizza */
 Router.post("/pizzas/create", authenticateToken, async (req, res) => {
-	const body = req.body;
-	const name = body.name;
-	const description = body.description;
+	const { body } = req;
+	const { name } = body;
+	const { description } = body;
 	let message = "Pizza created";
 
 	await models.Pizza.findOne({ name }, "_id", null, (err: any, pizza) => {
@@ -69,24 +70,23 @@ Router.post("/pizzas/create", authenticateToken, async (req, res) => {
 			message = "Pizza already exist";
 
 			return res.json({ message });
-		} else {
-			const imgPath: string = uploadImgPizza(req, res);
-			const p: IPizza = { name, description, price: body.price, qty: body.qty, img_path: imgPath };
-
-			models.Pizza.create(p).then((pizza) => {
-				return res.json({ message, pizza });
-			});
 		}
+		const imgPath: string = uploadImgPizza(req, res);
+		const p: IPizza = { name, description, price: body.price, qty: body.qty, img_path: imgPath };
+
+		return models.Pizza.create(p).then((pizza) => {
+			return res.json({ message, pizza });
+		});
 	});
 });
 
 /** Update pizza */
 Router.put("/pizzas/update/:pizzaId", authenticateToken, async (req, res) => {
 	const _id = new mongoose.Types.ObjectId(req.params.pizzaId);
-	const body = req.body;
-	const name = body.name;
-	const description = body.description;
-	let message: string = "Pizza info updated";
+	const { body } = req;
+	const { name } = body;
+	const { description } = body;
+	const message: string = "Pizza info updated";
 	const p: IPizza = { name, description, price: body.price, qty: body.qty };
 
 	if (body.oldImgPath) deleteImg(body.oldImgPath);
@@ -94,7 +94,7 @@ Router.put("/pizzas/update/:pizzaId", authenticateToken, async (req, res) => {
 
 	const data = await models.Pizza.updateOne({ _id }, { $set: { ...p } }, { upsert: true });
 
-	if (data.n === 1) return res.json({ message, pizza: p });
+	if (data.n === 1) res.json({ message, pizza: p });
 });
 
 /** Delete pizza */
@@ -103,11 +103,9 @@ Router.delete("/pizzas/delete/:pizzaId", authenticateToken, async (req, res) => 
 	const message: string = "Pizza deleted";
 
 	await models.Pizza.findOne({ _id }, (err, pizza: IPizza) => {
-		if (pizza) {
-			deleteImg(pizza.img_path);
+		if (pizza) deleteImg(pizza.img_path);
 
-			return res.json({ message });
-		}
+		return res.json({ message });
 	});
 });
 
@@ -148,9 +146,9 @@ Router.get("/orders/:userId", authenticateToken, async (req, res) => {
 
 /** Create order */
 Router.post("/orders/create", async (req, res) => {
-	const pizzasIds: string[] = req.body.pizzasIds;
-	const userId = req.body.userId;
-	let order: IOrder = {
+	const { pizzasIds } = req.body;
+	const { userId } = req.body;
+	const order: IOrder = {
 		n_order: orderNumber(),
 		pizzas: pizzasIds.map((pi) => new mongoose.Types.ObjectId(pi)),
 		user: new mongoose.Types.ObjectId(userId),
@@ -173,13 +171,13 @@ Router.post("/orders/create", async (req, res) => {
 /** Update order */
 Router.put("/orders/update/:orderId", authenticateToken, async (req, res) => {
 	const _id = new mongoose.Types.ObjectId(req.params.orderId);
-	const status: string = req.body.status;
-	const pizzas: IPizza[] = req.body.pizzas;
+	const { status } = req.body;
+	const { pizzas } = req.body;
 	const message: string = "Order info updated";
 
 	if (status === "finish") {
 		pizzas.map((p) => {
-			const pizzaId: mongoose.Types._ObjectId = new mongoose.Types.ObjectId(p._id);
+			const pizzaId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(p._id);
 
 			if (p.qty > 0) {
 				models.Pizza.updateOne({ _id: pizzaId }, { $set: { qty: p.qty - 1 } });
@@ -191,7 +189,7 @@ Router.put("/orders/update/:orderId", authenticateToken, async (req, res) => {
 
 	// Send a mail for notification
 
-	if (data.n === 1) return res.json({ message });
+	if (data.n === 1) res.json({ message });
 });
 
 /* -------------------------------------------------------------------------- */
@@ -208,8 +206,8 @@ Router.get("/users", authenticateToken, async (req, res) => {
 
 /** Registration */
 Router.post("/registration", async (req, res) => {
-	const password = req.body.user.password;
-	const email = req.body.user.email;
+	const { password } = req.body.user;
+	const { email } = req.body.user;
 	let message = "User created";
 
 	await models.User.findOne({ email }, "_id", null, (err: any, user) => {
@@ -217,24 +215,24 @@ Router.post("/registration", async (req, res) => {
 			message = "User already exist";
 
 			return res.json({ message });
-		} else {
-			hashPass(password, (hash: string) => {
-				models.User.create({ ...req.body.user, password: hash }).then((result) => {
-					return res.json({ message });
-				});
-			});
 		}
+
+		return hashPass(password, (hash: string) => {
+			models.User.create({ ...req.body.user, password: hash }).then(() => {
+				return res.json({ message });
+			});
+		});
 	});
 });
 
 /** Login */
 Router.post("/login", async (req, res) => {
-	const email: string = req.body.user.email;
-	const password: string = req.body.user.password;
+	const { email } = req.body.user;
+	const { password } = req.body.user;
 
 	await models.User.findOne({ email }, (err, user: IUser) => {
 		if (user) {
-			bcrypt.compare(password, user.password, (err, result: boolean) => {
+			return bcrypt.compare(password, user.password, (err, result: boolean) => {
 				if (result) {
 					const token = generateAccessToken(email);
 					const u = {
@@ -245,20 +243,19 @@ Router.post("/login", async (req, res) => {
 					};
 
 					return res.json({ message: "User logged in", user: u, token });
-				} else {
-					return res.json({ message: "Username or password not match" });
 				}
+				return res.json({ message: "Username or password not match" });
 			});
-		} else {
-			return res.json({ message: "User not exist" });
 		}
+
+		return res.json({ message: "User not exist" });
 	});
 });
 
 /** Create user by admin */
 Router.post("/users/create", authenticateToken, async (req, res) => {
-	const password = req.body.user.password;
-	const email = req.body.user.email;
+	const { password } = req.body.user;
+	const { email } = req.body.user;
 	let message = "User created";
 
 	await models.User.findOne({ email }, "_id", null, (err: any, user) => {
@@ -266,15 +263,15 @@ Router.post("/users/create", authenticateToken, async (req, res) => {
 			message = "User already exist";
 
 			return res.json({ message });
-		} else {
-			bcrypt.genSalt(saltRounds, (err, salt) => {
-				bcrypt.hash(password, salt, (err, hash: string) => {
-					models.User.create({ ...req.body.user, password: hash }).then((user) => {
-						return res.json({ message, user });
-					});
+		}
+
+		return bcrypt.genSalt(saltRounds, (err, salt) => {
+			bcrypt.hash(password, salt, (err, hash: string) => {
+				models.User.create({ ...req.body.user, password: hash }).then((user) => {
+					return res.json({ message, user });
 				});
 			});
-		}
+		});
 	});
 });
 
@@ -287,11 +284,11 @@ Router.put("/users/update/:userId", authenticateToken, (req, res) => {
 		if (password) user.password = password;
 		const data = await models.User.updateOne({ _id }, { $set: { ...user } }, { upsert: true });
 
-		if (data.n === 1) return res.json({ message });
+		if (data.n === 1) res.json({ message });
 	};
 
 	if (req.body.password) {
-		const password: string = req.body.password;
+		const { password } = req.body;
 
 		hashPass(password, (hash: string) => response(hash));
 	}

@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
@@ -11,8 +11,8 @@ import { formatDate, closeModal, truncate } from "src/js/Helpers";
 import { IPizza, State } from "src/interfaces/interfaces";
 
 const Pizzas = (props) => {
-	const { loading, pizzas, deletePizza, updatePizza, createPizza, getPizzas } = props;
-	const [create, setCreate] = React.useState<boolean>(true);
+	const { loading, pizzas } = props;
+	const [create, setCreate] = useState<boolean>(true);
 	const init = {
 		name: "",
 		description: "",
@@ -20,8 +20,8 @@ const Pizzas = (props) => {
 		qty: 0,
 		img: null,
 	};
-	const [currentPizza, setCurrentPizza] = React.useState(null);
-	const [values, setValues] = React.useState(init);
+	const [currentPizza, setCurrentPizza] = useState(null);
+	const [values, setValues] = useState(init);
 	const dispatch = useDispatch();
 	const handlePizza = (pizza: IPizza) => {
 		setValues(pizza as any);
@@ -29,8 +29,8 @@ const Pizzas = (props) => {
 		setCurrentPizza(pizza);
 	};
 	const handleChange = (evt) => {
-		const value = evt.target.value;
-		const name = evt.target.name;
+		const { value } = evt.target;
+		const { name } = evt.target;
 
 		setValues({ ...values, [name]: value });
 	};
@@ -40,6 +40,16 @@ const Pizzas = (props) => {
 		setValues({ ...values, img });
 	};
 	const dataForm = new FormData();
+	const appendForm = () => {
+		const { img, name, price, qty, description } = values;
+
+		if (img) dataForm.append("file", img, img.fileName);
+		if (name) dataForm.set("name", name);
+		if (price) dataForm.set("price", price);
+		if (description) dataForm.set("description", description);
+		if (qty) dataForm.set("qty", `${qty}`);
+		if (!create) dataForm.set("oldImgPath", currentPizza.img_path);
+	};
 	const handleCreate = async () => {
 		dispatch(updateLoading("pizzas", true));
 		appendForm();
@@ -47,11 +57,11 @@ const Pizzas = (props) => {
 		const response = await axiosInstance({
 			headers: {
 				accept: "application/json",
-				"Content-Type": `multipart/form-data; boundary=${(dataForm as any)._boundary}`,
+				"Content-Type": `multipart/form-data; boundary=${dataForm["_boundary"]}`,
 			},
 		}).post("/pizzas/create", dataForm);
-		const data = response.data;
-		const message = data.message;
+		const { data } = response;
+		const { message } = data;
 
 		if (message === "Pizza already exist") {
 			return Swal.fire({
@@ -60,27 +70,16 @@ const Pizzas = (props) => {
 				icon: "error",
 				confirmButtonText: "OK",
 			});
-		} else {
-			setValues(init);
-			createPizza(data.pizza);
-			closeModal();
-			return Swal.fire({
-				title: "Succès",
-				text: "La pizza à bien été créée avec succès.",
-				icon: "success",
-				confirmButtonText: "OK",
-			});
 		}
-	};
-	const appendForm = () => {
-		const { img, name, price, qty, description } = values;
-
-		img && dataForm.append("file", img, img.fileName);
-		name && dataForm.set("name", name);
-		price && dataForm.set("price", price);
-		description && dataForm.set("description", description);
-		qty && dataForm.set("qty", qty + "");
-		!create && dataForm.set("oldImgPath", currentPizza.img_path);
+		setValues(init);
+		dispatch(createPizza(data.pizza));
+		closeModal();
+		return Swal.fire({
+			title: "Succès",
+			text: "La pizza à bien été créée avec succès.",
+			icon: "success",
+			confirmButtonText: "OK",
+		});
 	};
 	const handleUpdate = async () => {
 		dispatch(updateLoading("pizzas", true));
@@ -89,19 +88,21 @@ const Pizzas = (props) => {
 		const response = await axiosInstance({
 			headers: {
 				accept: "application/json",
-				"Content-Type": `multipart/form-data; boundary=${(dataForm as any)._boundary}`,
+				"Content-Type": `multipart/form-data; boundary=${dataForm["_boundary"]}`,
 			},
-		}).put(`/pizzas/update/${currentPizza._id}`, dataForm);
-		const data = response.data;
-		const message = data.message;
+		}).put(`/pizzas/update/${currentPizza["_id"]}`, dataForm);
+		const { data } = response;
+		const { message } = data;
 
 		if (message === "Pizza info updated") {
-			updatePizza({
-				...currentPizza,
-				...values,
-				...data.pizza,
-			});
-			return Swal.fire({
+			dispatch(
+				updatePizza({
+					...currentPizza,
+					...values,
+					...data.pizza,
+				})
+			);
+			Swal.fire({
 				title: "Succès",
 				text: "La pizza à bien été modifiée avec succès.",
 				icon: "success",
@@ -127,9 +128,9 @@ const Pizzas = (props) => {
 		}).then(async (result) => {
 			if (result.isConfirmed) {
 				await axiosInstance()
-					.delete(`/pizzas/delete/${pizza._id}`)
+					.delete(`/pizzas/delete/${pizza["_id"]}`)
 					.then(() => {
-						deletePizza(pizza);
+						dispatch(deletePizza(pizza));
 						return Swal.fire({
 							title: "Succès",
 							text: "La pizza à bien été supprimée avec succès.",
@@ -141,8 +142,8 @@ const Pizzas = (props) => {
 		});
 	};
 
-	React.useEffect(() => {
-		getPizzas();
+	useEffect(() => {
+		dispatch(getPizzas());
 	}, []);
 
 	if (loading) return <Loading />;
@@ -184,7 +185,7 @@ const Pizzas = (props) => {
 						<tbody>
 							{pizzas.map((pizza: IPizza, i) => {
 								return (
-									<tr key={i}>
+									<tr key={pizza["_id"]}>
 										<td className="table-primary">
 											<div>{i + 1}</div>
 										</td>
@@ -259,7 +260,8 @@ const Pizzas = (props) => {
 						value={values.description}
 						className="form-control"
 						placeholder="Leave a comment here"
-						id="floatingTextarea"></textarea>
+						id="floatingTextarea"
+					/>
 					<label htmlFor="floatingTextarea">Description</label>
 				</div>
 
@@ -300,6 +302,6 @@ const mapStateToProps = (state: State) => ({
 	loading: state.loading.pizzas,
 	pizzas: state.pizzas,
 });
-const mapDispatchToProps = { createPizza, getPizzas, deletePizza, updatePizza, updateLoading };
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Pizzas);

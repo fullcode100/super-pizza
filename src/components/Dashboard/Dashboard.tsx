@@ -1,21 +1,21 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
+import { isAdmin } from "src/js/Helpers";
+import { State } from "src/interfaces/interfaces";
 import Users from "./components/Users";
 import Orders from "./components/Orders";
 import Pizzas from "./components/Pizzas";
 import Settings from "./components/Settings";
 import MySpace from "./components/MySpace";
-import { isAdmin } from "src/js/Helpers";
-import { State } from "src/interfaces/interfaces";
 
 import "./Dashboard.scss";
 
 const Dashboard = (props) => {
 	const { user } = props;
-	const [activeTab, setActiveTab] = React.useState("myspace");
-	const location: Location = props.location;
-	const pathname: string = location.pathname;
+	const [activeTab, setActiveTab] = useState("myspace");
+	const { location } = props;
+	const { pathname } = location;
 	const updateUrlHashTab = (hash: string) => {
 		props.history.push({ pathname, hash });
 		setActiveTab(hash);
@@ -25,8 +25,8 @@ const Dashboard = (props) => {
 	};
 	const displayIfAdmin: boolean = user && isAdmin(user);
 
-	React.useEffect(() => {
-		const hash = location.hash;
+	useEffect(() => {
+		const { hash } = location;
 		const splitHash = hash.split("#");
 
 		if (hash) setActiveTab(splitHash[1]);
@@ -36,7 +36,7 @@ const Dashboard = (props) => {
 	return (
 		<div id="dashboard" className="container">
 			<h3>Tableau de bord</h3>
-			
+
 			<ul className="nav nav-tabs" id="myTab" role="tablist">
 				{user && (
 					<li className="nav-item" role="presentation">

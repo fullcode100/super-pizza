@@ -1,5 +1,5 @@
 {
-	"parser": "babel-eslint",
+	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"ecmaVersion": 2020,
 		"sourceType": "module",
@@ -15,12 +15,31 @@
 	},
 	"plugins": ["react", "react-hooks", "jsx-a11y", "import", "prettier"],
 	"rules": {
-		"prettier/prettier": ["error"],
-		"react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+		"prettier/prettier": ["warn"],
+		"react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
 		"react/jsx-uses-react": "off",
 		"react/react-in-jsx-scope": "off",
 		"no-console": "off",
 		"no-debugger": "off",
-		"@typescript-eslint/no-explicit-any": "off"
+		"@typescript-eslint/no-explicit-any": "off",
+		"import/no-unresolved": "off",
+		"import/extensions": "off",
+		"react/prop-types": "off",
+		"react/jsx-props-no-spreading": "off",
+		"jsx-a11y/anchor-is-valid": "off",
+		"radix": "off",
+		"react/no-unescaped-entities": "off",
+		"react-hooks/exhaustive-deps": "off",
+		"dot-notation": "off",
+		"no-unused-vars": "warn",
+		"jsx-a11y/label-has-associated-control": "off",
+		"camelcase": "off",
+		"no-use-before-define": "off",
+		"no-underscore-dangle": "off",
+		"jsx-a11y/no-static-element-interactions": "off",
+		"jsx-a11y/click-events-have-key-events": "off",
+		"no-bitwise": "off",
+		"no-shadow": "off",
+		"array-callback-return": "off"
 	}
 }

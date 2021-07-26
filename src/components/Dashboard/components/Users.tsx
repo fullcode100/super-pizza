@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
@@ -11,16 +11,16 @@ import { formatDate, closeModal } from "src/js/Helpers";
 import { IUser, State } from "src/interfaces/interfaces";
 
 const Users = (props) => {
-	const { loading, users, deleteUser, updateUser, createUser, getUsers } = props;
-	const [currentUser, setCurrentUser] = React.useState<IUser>(null);
-	const [create, setCreate] = React.useState<boolean>(true);
+	const { loading, users } = props;
+	const [currentUser, setCurrentUser] = useState<IUser>(null);
+	const [create, setCreate] = useState<boolean>(true);
 	const init = {
 		username: "",
 		email: "",
 		role: "",
 		password: "",
 	};
-	const [values, setValues] = React.useState(init);
+	const [values, setValues] = useState(init);
 	const dispatch = useDispatch();
 	const handleUser = (user: IUser) => {
 		setValues(user as IUser);
@@ -28,8 +28,8 @@ const Users = (props) => {
 		setCurrentUser(user);
 	};
 	const handleChange = (evt) => {
-		const value = evt.target.value;
-		const name = evt.target.name;
+		const { value } = evt.target;
+		const { name } = evt.target;
 
 		setValues({ ...values, [name]: value });
 	};
@@ -37,8 +37,8 @@ const Users = (props) => {
 		dispatch(updateLoading("users", true));
 
 		const response = await axiosInstance().post("/users/create", { user: values });
-		const data = response.data;
-		const message = data.message;
+		const { data } = response;
+		const { message } = data;
 
 		if (message === "User already exist") {
 			return Swal.fire({
@@ -47,17 +47,16 @@ const Users = (props) => {
 				icon: "error",
 				confirmButtonText: "OK",
 			});
-		} else {
-			setValues(init);
-			createUser(data.user);
-			closeModal();
-			return Swal.fire({
-				title: "Succès",
-				text: "L'utilisateur à bien été créée avec succès.",
-				icon: "success",
-				confirmButtonText: "OK",
-			});
 		}
+		setValues(init);
+		dispatch(createUser(data.user));
+		closeModal();
+		return Swal.fire({
+			title: "Succès",
+			text: "L'utilisateur à bien été créée avec succès.",
+			icon: "success",
+			confirmButtonText: "OK",
+		});
 	};
 	const handleUpdate = async () => {
 		dispatch(updateLoading("users", true));
@@ -65,15 +64,17 @@ const Users = (props) => {
 		const response = await axiosInstance().put(`/users/update/${currentUser._id}`, {
 			role: values.role,
 		});
-		const data = response.data;
-		const message = data.message;
+		const { data } = response;
+		const { message } = data;
 
 		if (message === "User info updated") {
-			updateUser({
-				...currentUser,
-				role: values.role,
-			});
-			return Swal.fire({
+			dispatch(
+				updateUser({
+					...currentUser,
+					role: values.role,
+				})
+			);
+			Swal.fire({
 				title: "Succès",
 				text: "L'utilisateur à bien été modifiée avec succès.",
 				icon: "success",
@@ -101,7 +102,7 @@ const Users = (props) => {
 				await axiosInstance()
 					.delete(`/users/delete/${user._id}`)
 					.then(() => {
-						deleteUser(user);
+						dispatch(deleteUser(user));
 						return Swal.fire({
 							title: "Succès",
 							text: "L'utilisateur à bien été supprimer avec succès.",
@@ -113,8 +114,8 @@ const Users = (props) => {
 		});
 	};
 
-	React.useEffect(() => {
-		getUsers();
+	useEffect(() => {
+		dispatch(getUsers());
 	}, []);
 
 	if (loading) return <Loading />;
@@ -156,7 +157,7 @@ const Users = (props) => {
 								const isAdmin = user.role === "Administrateur";
 
 								return (
-									<tr key={i}>
+									<tr key={user._id}>
 										<td className="table-primary">
 											<div>{i + 1}</div>
 										</td>
@@ -268,6 +269,6 @@ const mapStateToProps = (state: State) => ({
 	loading: state.loading.users,
 	users: state.users,
 });
-const mapDispatchToProps = { createUser, getUsers, deleteUser, updateUser, updateLoading };
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users);

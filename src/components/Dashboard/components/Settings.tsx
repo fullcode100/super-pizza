@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
@@ -8,22 +8,20 @@ import { updateLoading, getSettings, updateSettings } from "src/actions";
 import { settingsTrans, closeModal } from "src/js/Helpers";
 import Loading from "src/components/Loading/Loading";
 
-import { ISettings, State } from "src/interfaces/interfaces";
+import { State } from "src/interfaces/interfaces";
 
 const Settings = (props) => {
-	const { loading, settings, updateSettings, getSettings } = props;
-	const [setting, setSetting] = React.useState({});
-	const [values, setValues] = React.useState({});
-	const [modal, setModal] = React.useState(false);
-	const toggle = () => setModal(!modal);
-	const handleSetting = (setting) => {
-		setSetting(setting);
-		setValues(setting);
+	const { loading, settings } = props;
+	const [setting, setSetting] = useState({});
+	const [values, setValues] = useState({});
+	const handleSetting = (s: {}) => {
+		setSetting(s);
+		setValues(s);
 	};
 	const dispatch = useDispatch();
 	const handleChange = (evt) => {
-		const value = evt.target.value;
-		const name = evt.target.name;
+		const { value } = evt.target;
+		const { name } = evt.target;
 
 		setValues({ [name]: value });
 	};
@@ -32,12 +30,12 @@ const Settings = (props) => {
 
 		const s = { ...setting, ...values };
 		const response = await axiosInstance().put(`/settings/update/${s["_id"]}`, { setting: s });
-		const data = response.data;
-		const message = data.message;
+		const { data } = response;
+		const { message } = data;
 
 		if (message === "Setting updated") {
-			updateSettings(s);
-			return Swal.fire({
+			dispatch(updateSettings(s));
+			Swal.fire({
 				title: "Succès",
 				text: "Les paramètres ont bien été modifiée avec succès.",
 				icon: "success",
@@ -52,8 +50,8 @@ const Settings = (props) => {
 		}
 	};
 
-	React.useEffect(() => {
-		getSettings();
+	useEffect(() => {
+		dispatch(getSettings());
 	}, []);
 
 	if (loading) return <Loading />;
@@ -71,13 +69,13 @@ const Settings = (props) => {
 						</tr>
 					</thead>
 					<tbody>
-						{settings.map((s, i) => {
-							const _id = s[Object.keys(s)[0]];
-							const key = Object.keys(s)[1];
-							const value = s[key];
+						{settings.map((_setting, i) => {
+							const _id = _setting[Object.keys(_setting)[0]];
+							const key = Object.keys(_setting)[1];
+							const value = _setting[key];
 
 							return (
-								<tr key={i}>
+								<tr key={_id}>
 									<td className="table-primary">
 										<div>{i + 1}</div>
 									</td>
@@ -107,7 +105,7 @@ const Settings = (props) => {
 					</tbody>
 				</table>
 
-				<Modal id="settingsModal" title={"Modifier les paramètres"} buttonName={"Modifier"} handleValid={handleUpdate}>
+				<Modal id="settingsModal" title="Modifier les paramètres" buttonName="Modifier" handleValid={handleUpdate}>
 					<div className="input-group mt-4 mb-4">
 						<input
 							value={values["order_capacity_by_hour"] || ""}
@@ -129,6 +127,6 @@ const mapStateToProps = (state: State) => ({
 	loading: state.loading.settings,
 	settings: state.settings,
 });
-const mapDispatchToProps = { getSettings, updateLoading, updateSettings };
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);

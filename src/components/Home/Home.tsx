@@ -1,5 +1,5 @@
-import React from "react";
-import { connect } from "react-redux";
+import { useEffect } from "react";
+import { connect, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
 import Loading from "src/components/Loading/Loading";
@@ -10,7 +10,8 @@ import { IPizza, State } from "src/interfaces/interfaces";
 import "./Home.scss";
 
 const Home = (props) => {
-	const { loading, pizzas, getPizzas, addToCart } = props;
+	const { loading, pizzas } = props;
+	const dispatch = useDispatch();
 	const handleClick = (pizza: IPizza) => {
 		if (!isConnected()) {
 			return Swal.fire({
@@ -19,25 +20,25 @@ const Home = (props) => {
 				icon: "info",
 				confirmButtonText: "OK",
 			});
-		} else {
-			addToCart(pizza);
 		}
+
+		return dispatch(addToCart(pizza));
 	};
 
-	React.useEffect(() => {
-		getPizzas();
+	useEffect(() => {
+		dispatch(getPizzas());
 	}, []);
 
 	if (loading) return <Loading />;
 
 	return (
 		<div id="home" className="container">
-			<h3>Liste des pizzas </h3>
+			<h3>Pizzas </h3>
 
 			<div className="row" id="pizzas-container">
-				{pizzas.map((pizza: IPizza, i: number) => {
+				{pizzas.map((pizza: IPizza) => {
 					return (
-						<div key={i} className="col-4">
+						<div key={pizza._id} className="col-4">
 							<div className="card" style={{ width: "18rem" }}>
 								<img src={pizza.img_path} className="card-img-top" alt={pizza.name} />
 								<div className="card-body">
@@ -70,7 +71,6 @@ const Home = (props) => {
 											title="Panier"
 											data-bs-content={`${pizza.name} à été ajoutée au panier !`}
 											data-bs-placement="top"
-											tabIndex={0}
 											data-bs-trigger="focus"
 											className="btn btn-success">
 											Ajouter au panier
@@ -95,6 +95,6 @@ const mapStateToProps = (state: State) => ({
 	pizzas: state.pizzas,
 	cart: state.cart,
 });
-const mapDispatchToProps = { getPizzas, addToCart };
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

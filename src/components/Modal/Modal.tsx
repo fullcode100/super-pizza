@@ -1,5 +1,3 @@
-import React from "react";
-
 const Modal = ({ id, children, title, buttonName, handleValid }) => {
 	return (
 		<div className="modal fade" id={id} data-backdrop="false" aria-labelledby={`${id}Label`} aria-hidden="true">
@@ -9,7 +7,7 @@ const Modal = ({ id, children, title, buttonName, handleValid }) => {
 						<h5 className="modal-title" id={`${id}Label`}>
 							{title}
 						</h5>
-						<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
 					</div>
 					<div className="modal-body">{children}</div>
 					<div className="modal-footer">

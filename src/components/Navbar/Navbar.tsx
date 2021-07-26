@@ -1,28 +1,29 @@
-import React from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
-import axiosInstance from "../../js/Axios";
-import Modal from "../Modal/Modal";
 import { login, clearCart, logout, removeFromCart } from "src/actions";
 import { closeModal } from "src/js/Helpers";
 
-import { IUser, IPizza, State } from "src/interfaces/interfaces";
+import { IPizza, State } from "src/interfaces/interfaces";
+import Modal from "../Modal/Modal";
+import axiosInstance from "../../js/Axios";
 
 import "./Navbar.scss";
 
 const Navbar = (props) => {
-	const { user, cart, login, removeFromCart, clearCart, logout } = props;
-	const [isLogin, setIsLogin] = React.useState(false);
-	const [values, setValues] = React.useState({
+	const { user, cart } = props;
+	const [isLogin, setIsLogin] = useState(false);
+	const dispatch = useDispatch();
+	const [values, setValues] = useState({
 		username: "",
 		email: "",
 		password: "",
 	} as any);
 	const handleChange = (evt) => {
-		const value = evt.target.value;
-		const name = evt.target.name;
+		const { value } = evt.target;
+		const { name } = evt.target;
 
 		setValues({ ...values, [name]: value });
 	};
@@ -31,10 +32,10 @@ const Navbar = (props) => {
 		const response = await axiosInstance().post(path, {
 			user: { ...values, role: "Utilisateur" },
 		});
-		const data = response.data;
+		const { data } = response;
 
 		if (!isLogin) {
-			const message = data.message;
+			const { message } = data;
 
 			if (message === "User already exist") {
 				return Swal.fire({
@@ -43,38 +44,36 @@ const Navbar = (props) => {
 					icon: "error",
 					confirmButtonText: "OK",
 				});
-			} else {
-				setValues({
-					username: "",
-					email: "",
-					password: "",
-				});
-				closeModal();
-				return Swal.fire({
-					title: "Succès",
-					text: "Votre inscription a été effectuée avec succès. Vous pouvez vous connecter.",
-					icon: "success",
-					confirmButtonText: "OK",
-				});
 			}
-		} else {
-			const message = data.message;
-			const token: string = data.token;
-			const user: IUser = data.user;
-
-			if (message !== "User logged in") {
-				return Swal.fire({
-					title: "Erreur",
-					text: "Vos identifiants ne sont pas corrects.",
-					icon: "error",
-					confirmButtonText: "OK",
-				});
-			}
-			window.localStorage.setItem("token", token);
-			window.localStorage.setItem("user", JSON.stringify(user));
-			login(user);
+			setValues({
+				username: "",
+				email: "",
+				password: "",
+			});
 			closeModal();
+			return Swal.fire({
+				title: "Succès",
+				text: "Votre inscription a été effectuée avec succès. Vous pouvez vous connecter.",
+				icon: "success",
+				confirmButtonText: "OK",
+			});
 		}
+
+		const { message } = data;
+		const { token } = data;
+
+		if (message !== "User logged in") {
+			return Swal.fire({
+				title: "Erreur",
+				text: "Vos identifiants ne sont pas corrects.",
+				icon: "error",
+				confirmButtonText: "OK",
+			});
+		}
+		window.localStorage.setItem("token", token);
+		window.localStorage.setItem("user", JSON.stringify(data.user));
+		dispatch(login(data.user));
+		return closeModal();
 	};
 	const total = cart.reduce((n, { price }) => n + price, "");
 	const handleOrder = async () => {
@@ -83,8 +82,8 @@ const Navbar = (props) => {
 			pizzasIds,
 			userId: user._id,
 		});
-		const data = response.data;
-		const message = data.message;
+		const { data } = response;
+		const { message } = data;
 
 		if (message === "Order waiting") {
 			return Swal.fire({
@@ -93,7 +92,8 @@ const Navbar = (props) => {
 				icon: "warning",
 				confirmButtonText: "OK",
 			});
-		} else if (message === "Order in progress") {
+		}
+		if (message === "Order in progress") {
 			return Swal.fire({
 				title: "En cours de traitement",
 				text: "Votre commande à été prise en compte. Vous serez notifiez par mail dès qu'elle est prête.",
@@ -102,7 +102,7 @@ const Navbar = (props) => {
 			});
 		}
 
-		clearCart();
+		return dispatch(clearCart());
 	};
 
 	return (
@@ -119,7 +119,7 @@ const Navbar = (props) => {
 					aria-controls="navbarSupportedContent"
 					aria-expanded="false"
 					aria-label="Toggle navigation">
-					<span className="navbar-toggler-icon"></span>
+					<span className="navbar-toggler-icon" />
 				</button>
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav me-auto mb-2 mb-lg-0">
@@ -235,11 +235,11 @@ const Navbar = (props) => {
 										{cart.length > 0 ? (
 											cart.map((c, i) => {
 												return (
-													<li key={i}>
+													<li key={c.name}>
 														<a className="dropdown-item disabled">
 															{c.name} - {c.price}€
 														</a>
-														<a onClick={() => removeFromCart(c)} className="btn dropdown-item">
+														<a onClick={() => dispatch(removeFromCart(c))} className="btn dropdown-item">
 															<b>Retirer du panier</b>
 														</a>
 														{cart.length - 1 !== i && <hr />}
@@ -269,7 +269,7 @@ const Navbar = (props) => {
 									</ul>
 								</li>
 								<li className="nav-item">
-									<a className="nav-link" onClick={logout}>
+									<a className="nav-link" onClick={() => dispatch(logout())}>
 										Deconnexion
 									</a>
 								</li>
@@ -286,6 +286,6 @@ const mapStateToProps = (state: State) => ({
 	user: state.user,
 	cart: state.cart,
 });
-const mapDispatchToProps = { login, logout, clearCart, removeFromCart };
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
