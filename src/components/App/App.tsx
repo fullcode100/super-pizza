@@ -13,7 +13,7 @@ import { login, updateLoading } from "src/actions";
 import { getCurrentUser } from "src/js/Helpers";
 import { State } from "src/interfaces/interfaces";
 
-const App = (props) => {
+const App = (props: State) => {
 	const { loading } = props;
 	const dispatch = useDispatch();
 
@@ -50,7 +50,7 @@ const App = (props) => {
 			<div className="container mt-4">
 				<div className="alert alert-info text-center" role="alert">
 					Ce projet est plus axé sur la partie serveur (NodeJS). Cette interface permet de tester et interagir avec notre API. Les (fakes)
-					données sont enregistrées dans une base de données Mongodb et sont purger automatiquement à l'aide de CRON.
+					données sont enregistrées dans une base de données Mongodb.
 				</div>
 			</div>
 

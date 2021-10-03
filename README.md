@@ -1,8 +1,8 @@
-# Super Pizza
+# SUPER PIZZA
 
 ## STACK
 
-ReactJS, Redux, Redux-Thunk, React-Router, Typescript, NodeJS (ExpressJS), Mongoose, Mongodb, Axios, SCSS, [...]
+ReactJS, Redux, Redux-Thunk, React-Router, Webpack (Dev & Build), Javascript (ES6) - Typescript, NodeJS (ExpressJS), Mongoose, Mongodb, Axios, SCSS, [...]
 
 ## LIVE DEMO
 
@@ -54,8 +54,10 @@ SCREENSHOT: **[HERE](https://drive.google.com/file/d/1X8Vnb_ZMiI2OATm6C-sYE-q-nw
 
 ## Setup
 
-- Update var (**MONGODB_URI** & **DB_NAME**) in .env file (<[rootDir]>/server/.env)
-- Create root user with admin rôle in your database (users table)
+*Don't forget to rename .env.example to .env and update content*
+
+- Update **MONGODB_URI** var in .env file (<[rootDir]>/server/.env)
+- Create root user with admin rôle in your database (users table) - See User model (<[rootDir]>/server/models/User.ts)
 
 #### Dev (client)
 

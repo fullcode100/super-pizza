@@ -6,15 +6,13 @@ import { dev } from "../index";
 import models from "./mongodb";
 import { authenticateToken, generateAccessToken } from "./jwt";
 import { deleteImg, hashPass, orderNumber, uploadImgPizza } from "./helpers";
-/* -------------------------------------------------------------------------- */
-/*                                 INTERFACES                                 */
-/* -------------------------------------------------------------------------- */
+
 import { IOrder, IPizza, IUser } from "../../src/interfaces/interfaces";
 
 const Router: IRouter = express.Router();
 /* -------------------------------------------------------------------------- */
 
-const saltRounds = 10;
+const SALT_ROUNDS = 10;
 
 if (!dev) {
 	Router.get("/", (req, res) => {
@@ -71,7 +69,7 @@ Router.post("/pizzas/create", authenticateToken, async (req, res) => {
 
 			return res.json({ message });
 		}
-		const imgPath: string = uploadImgPizza(req, res);
+		const imgPath = uploadImgPizza(req);
 		const p: IPizza = { name, description, price: body.price, qty: body.qty, img_path: imgPath };
 
 		return models.Pizza.create(p).then((pizza) => {
@@ -90,7 +88,7 @@ Router.put("/pizzas/update/:pizzaId", authenticateToken, async (req, res) => {
 	const p: IPizza = { name, description, price: body.price, qty: body.qty };
 
 	if (body.oldImgPath) deleteImg(body.oldImgPath);
-	if (req["files"]) p.img_path = uploadImgPizza(req, res);
+	if (req["files"]) p.img_path = uploadImgPizza(req);
 
 	const data = await models.Pizza.updateOne({ _id }, { $set: { ...p } }, { upsert: true });
 
@@ -265,7 +263,7 @@ Router.post("/users/create", authenticateToken, async (req, res) => {
 			return res.json({ message });
 		}
 
-		return bcrypt.genSalt(saltRounds, (err, salt) => {
+		return bcrypt.genSalt(SALT_ROUNDS, (err, salt) => {
 			bcrypt.hash(password, salt, (err, hash: string) => {
 				models.User.create({ ...req.body.user, password: hash }).then((user) => {
 					return res.json({ message, user });

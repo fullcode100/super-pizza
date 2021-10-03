@@ -40,6 +40,7 @@
 		"jsx-a11y/click-events-have-key-events": "off",
 		"no-bitwise": "off",
 		"no-shadow": "off",
-		"array-callback-return": "off"
+		"array-callback-return": "off",
+		"func-names": "off"
 	}
 }

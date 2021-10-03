@@ -4,9 +4,9 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import fileUpload from "express-fileupload";
 
-require("dotenv").config({ path: path.resolve(__dirname, ".env") });
-
 import { dbConnect } from "./extras/mongodb";
+
+require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 
 const app: Application = express();
 const dev: boolean = process.env.NODE_ENV === "development";
@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload({ createParentPath: true }) as any);
 
-if (!dev) app.use(express.static(path.join(__dirname + "/../")));
+if (!dev) app.use(express.static(path.join(`${__dirname}/../`)));
 
 /* -------------------------------------------------------------------------- */
 /*                                   ROUTES                                   */
