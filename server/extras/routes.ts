@@ -1,3 +1,4 @@
+/* eslint-disable import/no-import-module-exports */
 import mongoose from "mongoose";
 import express, { Router as IRouter } from "express";
 import bcrypt from "bcrypt";
@@ -5,7 +6,7 @@ import bcrypt from "bcrypt";
 import { dev } from "../index";
 import models from "./mongodb";
 import { authenticateToken, generateAccessToken } from "./jwt";
-import { deleteImg, hashPass, orderNumber, uploadImgPizza } from "./helpers";
+import { hashPass, orderNumber, uploadImgPizza } from "./helpers";
 
 import { IOrder, IPizza, ISettings, IUser } from "../../src/interfaces";
 
@@ -229,7 +230,7 @@ Router.post("/login", async (req, res) => {
 		});
 	}
 
-	res.json({ message: "User not exist" });
+	return res.json({ message: "User not exist" });
 });
 
 /** Create admin */
@@ -244,7 +245,7 @@ Router.post("/admins/create", async (req, res) => {
 
 	return bcrypt.genSalt(SALT_ROUNDS, (err, salt) => {
 		bcrypt.hash(password, salt, (err, hash: string) => {
-			models.User.create({ ...req.body.user, role: "Administrateur", password: hash }).then((user) => {
+			models.User.create({ ...req.body.user, role: "Administrateur", password: hash }).then(() => {
 				res.json({ message: "User created" });
 			});
 		});

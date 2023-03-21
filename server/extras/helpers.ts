@@ -1,4 +1,5 @@
 import fs from "fs";
+import nodePath from "path";
 import bcrypt from "bcrypt";
 import { Request } from "express";
 import { UploadedFile } from "express-fileupload";
@@ -25,14 +26,18 @@ export const uploadImgPizza = (req: Request): string | undefined => {
 	if (!req.files) return undefined;
 	// Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
 	const img = req.files.file as UploadedFile;
-	const path = `/uploads/${img.name}`;
-	// Use the mv() method to place the file in upload directory (i.e. "uploads")
-	if (dev) {
-		img.mv(`./public${path}`);
-	} else {
-		img.mv(`.${path}`);
+	const path = nodePath.resolve(__dirname, `../../public/uploads`);
+	const filePath = `${path}/${img.name}`;
+
+	try {
+		if (!fs.existsSync(path)) fs.mkdirSync(path);
+		img.mv(filePath);
+		return `/uploads/${img.name}`;
+	} catch (err) {
+		console.error(err);
 	}
-	return path;
+
+	return undefined;
 };
 
 /**

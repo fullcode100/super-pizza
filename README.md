@@ -1,5 +1,11 @@
 # SUPER PIZZA
 
+## PREREQUISITES
+:
+**NodeJS**: *18.12.1*
+**Yarn**: *1.22.19*
+Or **NPM**: *8.19.2*
+
 ## STACK
 
 ReactJS, Redux, Redux-Thunk, React-Router, Webpack, JS (ES6) - Typescript, NodeJS (ExpressJS), Mongoose, Mongodb, Axios, SCSS, [...]

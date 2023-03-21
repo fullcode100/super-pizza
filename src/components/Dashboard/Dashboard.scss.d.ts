@@ -1,4 +1,4 @@
-// This file is generated automatically
+// This file is generated automatically 
 
 export const dashboard: string;
 export const navItem: string;

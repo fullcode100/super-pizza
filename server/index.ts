@@ -6,6 +6,7 @@ import fileUpload from "express-fileupload";
 
 import { dbConnect } from "./extras/mongodb";
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 
 const app: Application = express();
