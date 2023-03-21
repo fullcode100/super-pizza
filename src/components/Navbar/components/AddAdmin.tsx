@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 
-import { closeModal } from "src/js/Helpers";
 import Modal from "src/components/Modal/Modal";
 import axiosInstance from "src/js/Axios";
 
@@ -39,8 +38,6 @@ function AddAdmin() {
 		}
 
 		setValues({ username: "", email: "", password: "" });
-		closeModal();
-
 		return Swal.fire({
 			title: "Succès",
 			text: "Administrateur crée avec succès.",

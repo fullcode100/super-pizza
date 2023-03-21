@@ -1,5 +1,7 @@
 node_modules
 dist
+docker/.env
+docker/.data
 server/.env
 .vscode
 public/uploads/*

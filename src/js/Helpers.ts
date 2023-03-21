@@ -18,10 +18,13 @@ export const closeModal = () => {
 
 	document.body.classList.remove("modal-open");
 	document.body.style.paddingRight = "initial";
-	closeBtn.forEach((el, i) => {
-		if (el) (el as HTMLElement).click();
-		if (i >= closeBtn.length - 1 && modalBackdrop) modalBackdrop.remove();
-	});
+
+	if (closeBtn.length) {
+		closeBtn.forEach((el, i) => {
+			if (el) (el as HTMLElement).click();
+			if (i >= closeBtn.length - 1 && modalBackdrop) modalBackdrop.remove();
+		});
+	}
 
 	if (closeBtn.length === 0 && modalBackdrop) modalBackdrop.remove();
 };

@@ -1,26 +1,16 @@
-# SUPER PIZZA
+# PIZZAs
 
-## PREREQUISITES
-:
-**NodeJS**: *18.12.1*
-**Yarn**: *1.22.19*
-Or **NPM**: *8.19.2*
+### PREREQUISITES
 
-## STACK
+- **NodeJS**: *18.12.1*
+- **Yarn**: *1.22.19*
+- Or **NPM**: *8.19.2*
 
-ReactJS, Redux, Redux-Thunk, React-Router, Webpack, JS (ES6) - Typescript, NodeJS (ExpressJS), Mongoose, Mongodb, Axios, SCSS, [...]
+### STACK
 
-## Database
+ReactJS, Redux, Redux-Thunk, React-Router, Webpack, JS (ES6) - Typescript, NodeJS (ExpressJS), Mongoose, Mongodb, Axios, SCSS, Docker [...]
 
-You can create a account on mongodb cloud, it's free !
-
-> https://cloud.mongodb.com/
-
-Create tables if necessary (**orders**,**pizzas**,**settings**,**users**)
-
-SCREENSHOT: **[HERE](https://drive.google.com/file/d/1X8Vnb_ZMiI2OATm6C-sYE-q-nwmDmPz9/view?usp=sharing)**
-
-## Notes
+### Notes
 
 -   **Espace admin**
 
@@ -44,41 +34,56 @@ SCREENSHOT: **[HERE](https://drive.google.com/file/d/1X8Vnb_ZMiI2OATm6C-sYE-q-nw
         -   Annule une commande (Depuis le panier)
         -   Valider le panier (Depuis le panier)
 
-## Setup
+
+### Database
+
+You can create a account on mongodb cloud, it's free !
+> https://cloud.mongodb.com/
+
+or use docker present in this repo:
+
+```sh
+cd docker
+docker-compose up -d
+```
+
+### Setup
 
 *Don't forget to rename .env.example to .env and update content*
 
+- Create collections (**orders**,**pizzas**,**settings**,**users**)
+- Add doc in **settings** collection with **key**: order_capacity_by_hour **value**: 6
 - Update **MONGODB_URI / MONGODB_NAME** vars in .env file (<[rootDir]>/server/.env)
-- Create root user with admin rôle in your database (users table) - See User model (<[rootDir]>/server/models/User.ts)
-- You can also use UI (A button was added for the test)
+- Create root user with admin rôle manually in your users collection - See User model (<[rootDir]>/server/models/User.ts)
+- Or you can also use UI interface (a button was added for the test)
 
 #### Dev (client)
 
-```
+```sh
 yarn start:client (or npm run start:client)
 ```
 
 #### Dev (server)
 
-```
+```sh
 yarn start:server (or npm run start:server)
 ```
 
 #### Prod (client)
 
-```
+```sh
 yarn build:client (or npm run build:client)
 ```
 
 #### Prod (server)
 
-```
+```sh
 yarn build:server (or npm run build:server)
 ```
 
-### Lints and fixes files
+### Lint and lint fix
 
-```
+```sh
 yarn lint (or npm run lint)
 yarn lint:fix (or npm run lint:fix)
 ```

@@ -8,6 +8,7 @@ import { isConnected, truncate } from "src/js/Helpers";
 import { IPizza, State } from "src/interfaces";
 
 import "./Home.scss";
+import { AnyAction } from "redux";
 
 function Home(props) {
 	const { loading, pizzas } = props;
@@ -22,11 +23,11 @@ function Home(props) {
 			});
 		}
 
-		return dispatch(addToCart(pizza));
+		return dispatch(addToCart(pizza) as unknown as AnyAction);
 	};
 
 	useEffect(() => {
-		dispatch(getPizzas());
+		dispatch(getPizzas() as unknown as AnyAction);
 	}, []);
 
 	if (loading) return <Loading />;
@@ -36,51 +37,55 @@ function Home(props) {
 			<h3>Pizzas </h3>
 
 			<div className="row" id="pizzas-container">
-				{pizzas.map((pizza: IPizza) => (
-					<div key={pizza._id} className="col-4">
-						<div className="card" style={{ width: "18rem" }}>
-							<img src={pizza.img_path} className="card-img-top" alt={pizza.name} />
-							<div className="card-body">
-								<h5 className="card-title">Pizza: {pizza.name}</h5>
-								<p className="card-text">
-									<span data-bs-toggle="tooltip" data-bs-placement="top" title={pizza.description}>
-										{truncate(pizza.description, 10, "...")}
-									</span>
-								</p>
+				{pizzas.length <= 0 ? (
+					<div className="no-content">Aucune pizza à afficher</div>
+				) : (
+					pizzas.map((pizza: IPizza) => (
+						<div key={pizza._id} className="col-4">
+							<div className="card" style={{ width: "18rem" }}>
+								<img src={pizza.img_path} className="card-img-top" alt={pizza.name} />
+								<div className="card-body">
+									<h5 className="card-title">Pizza: {pizza.name}</h5>
+									<p className="card-text">
+										<span data-bs-toggle="tooltip" data-bs-placement="top" title={pizza.description}>
+											{truncate(pizza.description, 10, "...")}
+										</span>
+									</p>
 
-								<hr />
+									<hr />
 
-								<table>
-									<tbody>
-										<tr>
-											<td>
-												<b>Qty:</b>
-											</td>
-											<td> {pizza.qty} </td>
-										</tr>
-									</tbody>
-								</table>
+									<table>
+										<tbody>
+											<tr>
+												<td>
+													<b>Qty:</b>
+												</td>
+												<td> {pizza.qty} </td>
+											</tr>
+										</tbody>
+									</table>
 
-								{isConnected() ? (
-									<a
-										onClick={() => handleClick(pizza)}
-										data-bs-toggle="popover"
-										title="Panier"
-										data-bs-content={`${pizza.name} à été ajoutée au panier !`}
-										data-bs-placement="top"
-										data-bs-trigger="focus"
-										className="btn btn-success">
-										Ajouter au panier
-									</a>
-								) : (
-									<a onClick={() => handleClick(pizza)} className="btn btn-success">
-										Ajouter au panier
-									</a>
-								)}
+									{isConnected() ? (
+										<a
+											onClick={() => handleClick(pizza)}
+											data-bs-toggle="popover"
+											title="Panier"
+											data-bs-content={`${pizza.name} à été ajoutée au panier !`}
+											data-bs-placement="top"
+											data-bs-trigger="focus"
+											className="btn btn-success">
+											Ajouter au panier
+										</a>
+									) : (
+										<a onClick={() => handleClick(pizza)} className="btn btn-success">
+											Ajouter au panier
+										</a>
+									)}
+								</div>
 							</div>
 						</div>
-					</div>
-				))}
+					))
+				)}
 			</div>
 		</div>
 	);

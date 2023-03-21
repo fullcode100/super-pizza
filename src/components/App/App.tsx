@@ -5,7 +5,6 @@ import { useDispatch, connect } from "react-redux";
 import Loading from "src/components/Loading/Loading";
 import Dashboard from "src/components/Dashboard/Dashboard";
 import UseCase from "src/components/UseCase/UseCase";
-import Footer from "src/components/Footer/Footer";
 import Home from "src/components/Home/Home";
 import Navbar from "src/components/Navbar/Navbar";
 
@@ -49,23 +48,11 @@ function App(props: State) {
 		<>
 			<Navbar />
 
-			<div className="container mt-4">
-				<div className="alert alert-info text-center" role="alert">
-					Une app <b>ReactJS</b> qui intéragit avec une <b>API Rest</b> basé sur{" "}
-					<b>
-						NodeJS (<em>express</em>)
-					</b>
-					. Les données (fakes) sont enregistrées dans une base de données <b>Mongodb</b>.
-				</div>
-			</div>
-
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/dashboard" element={<Dashboard />} />
 				<Route path="/use-case" element={<UseCase />} />
 			</Routes>
-
-			<Footer />
 		</>
 	);
 }
