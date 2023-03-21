@@ -1,19 +1,17 @@
 import "./Footer.scss";
 
-const Footer = () => {
+function Footer() {
 	return (
 		<footer>
 			<p>
 				<small>
 					<a target="_blank" rel="noreferrer" href="https://gitlab.com/morelcisse/super-pizza">
-						REPO GIT
+						REPO GITHUB
 					</a>
-					<br />
-					Vous y trouverez toutes les informations.
 				</small>
 			</p>
 		</footer>
 	);
-};
+}
 
 export default Footer;

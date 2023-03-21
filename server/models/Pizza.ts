@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
+import { IPizza } from "../../src/interfaces";
 
 const { Schema } = mongoose;
 
-const pizzaSchema = new mongoose.Schema(
+const pizzaSchema = new mongoose.Schema<IPizza>(
 	{
-		// _id: Schema.Types.ObjectId,
 		name: Schema.Types.String,
 		price: Schema.Types.Number,
 		description: Schema.Types.String,
@@ -19,6 +19,6 @@ const pizzaSchema = new mongoose.Schema(
 	}
 );
 
-const Pizza = mongoose.model("Pizza", pizzaSchema);
+const Pizza = mongoose.model<IPizza>("Pizza", pizzaSchema);
 
 export default Pizza;

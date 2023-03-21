@@ -8,9 +8,9 @@ import { login, updateLoading } from "src/actions";
 import { closeModal } from "src/js/Helpers";
 import Loading from "src/components/Loading/Loading";
 
-import { IUser, State } from "src/interfaces/interfaces";
+import { IUser, State } from "src/interfaces";
 
-const MySpace = (props) => {
+function MySpace(props) {
 	const { loading, user } = props;
 	const init = {
 		username: "",
@@ -158,7 +158,7 @@ const MySpace = (props) => {
 			</div>
 		</div>
 	);
-};
+}
 
 const mapStateToProps = (state: State) => ({
 	user: state.user,

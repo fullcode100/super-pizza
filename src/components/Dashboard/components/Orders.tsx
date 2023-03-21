@@ -8,10 +8,11 @@ import axiosInstance from "src/js/Axios";
 import { getOrders, updateOrder } from "src/actions";
 import { getCurrentUser, truncate, formatDate, closeModal, orderStatusTrans, isAdmin } from "src/js/Helpers";
 
-import { State, IOrder } from "src/interfaces/interfaces";
+import { State, IOrder } from "src/interfaces";
+import { AnyAction } from "redux";
 
-const Orders = (props) => {
-	const { loading, orders, user } = props;
+function Orders(props: any) {
+	const { loading, orders, user } = props as State;
 	const [values, setValues] = useState({ status: "" });
 	const [currentOrder, setCurrentOrder] = useState(null);
 	const handleOrder = (order: IOrder) => {
@@ -37,7 +38,7 @@ const Orders = (props) => {
 				updateOrder({
 					...currentOrder,
 					status: values.status,
-				})
+				}) as unknown as AnyAction
 			);
 			closeModal();
 			Swal.fire({
@@ -53,10 +54,10 @@ const Orders = (props) => {
 	const displayIfAdmin: boolean = user && isAdmin(user);
 
 	useEffect(() => {
-		dispatch(getOrders(getCurrentUser()));
+		dispatch(getOrders(getCurrentUser()) as unknown as AnyAction);
 	}, []);
 
-	if (loading) return <Loading />;
+	if (loading.orders) return <Loading />;
 
 	return (
 		<div className="container">
@@ -149,10 +150,10 @@ const Orders = (props) => {
 			</Modal>
 		</div>
 	);
-};
+}
 
 const mapStateToProps = (state: State) => ({
-	loading: state.loading.orders,
+	loading: state.loading,
 	orders: state.orders,
 	user: state.user,
 });

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { Types } from "mongoose";
 
 export interface IUser {
 	_id?: string;
@@ -12,8 +12,8 @@ export interface IUser {
 export interface IOrder {
 	_id?: string;
 	n_order: string;
-	pizzas: mongoose.Types.ObjectId[];
-	user: mongoose.Types.ObjectId;
+	pizzas: Types.ObjectId[];
+	user: Types.ObjectId;
 	status: "waiting" | "in_progress" | "ready" | "finish";
 	created_at?: string;
 }
@@ -36,7 +36,12 @@ export interface State {
 	cart: IPizza[];
 	settings: any;
 	loading: {
-		[x: string]: boolean;
+		app: boolean;
+		users: boolean;
+		orders: boolean;
+		pizzas: boolean;
+		settings: boolean;
+		user: boolean;
 	};
 }
 

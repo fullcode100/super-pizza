@@ -1,4 +1,4 @@
-import { IUser } from "src/interfaces/interfaces";
+import { IUser } from "src/interfaces";
 
 export const createUUID = () => {
 	let dt = new Date().getTime();
@@ -32,9 +32,7 @@ export const getCurrentUser = (): IUser => {
 	return user;
 };
 
-export const isConnected = (): boolean => {
-	return getCurrentUser() != null;
-};
+export const isConnected = (): boolean => getCurrentUser() != null;
 
 const replace = (str: string) => str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
 
@@ -46,9 +44,7 @@ export const truncate = (str: string, limit, after) => {
 	return content;
 };
 
-export const isAdmin = (user: IUser): boolean => {
-	return user.role === "Administrateur";
-};
+export const isAdmin = (user: IUser): boolean => user.role === "Administrateur";
 
 export const orderStatusTrans = {
 	waiting: "En attente.",

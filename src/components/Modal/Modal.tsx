@@ -1,4 +1,4 @@
-const Modal = ({ id, children, title, buttonName, handleValid }) => {
+function Modal({ id, children, title, buttonName, handleValid }) {
 	return (
 		<div className="modal fade" id={id} data-backdrop="false" aria-labelledby={`${id}Label`} aria-hidden="true">
 			<div className="modal-dialog">
@@ -22,6 +22,6 @@ const Modal = ({ id, children, title, buttonName, handleValid }) => {
 			</div>
 		</div>
 	);
-};
+}
 
 export default Modal;

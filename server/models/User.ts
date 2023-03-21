@@ -1,14 +1,13 @@
 import mongoose from "mongoose";
+import models from "../extras/mongodb";
+import { IUser } from "../../src/interfaces";
 
-const { Schema } = mongoose;
-
-const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema<IUser>(
 	{
-		// _id: Schema.Types.ObjectId,
-		username: Schema.Types.String,
-		email: Schema.Types.String,
-		role: Schema.Types.String,
-		password: Schema.Types.String,
+		username: mongoose.Schema.Types.String,
+		email: mongoose.Schema.Types.String,
+		role: mongoose.Schema.Types.String,
+		password: mongoose.Schema.Types.String,
 	},
 	{
 		timestamps: {
@@ -18,10 +17,12 @@ const userSchema = new mongoose.Schema(
 	}
 );
 
-userSchema.pre("remove", function (next) {
-	this.model("Order").deleteMany({ user: this._id }, next as any);
+userSchema.pre("deleteOne", { document: true, query: true }, async function () {
+	const query = this.getQuery();
+
+	await models.Order.deleteMany({ user: query._id });
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model<IUser>("User", userSchema);
 
 export default User;

@@ -21,8 +21,8 @@ export const orderNumber = (): string => {
  * Move Uploaded Image
  * @param req
  */
-export const uploadImgPizza = (req: Request): string => {
-	if (!req.files) return null;
+export const uploadImgPizza = (req: Request): string | undefined => {
+	if (!req.files) return undefined;
 	// Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
 	const img = req.files.file as UploadedFile;
 	const path = `/uploads/${img.name}`;
@@ -39,7 +39,8 @@ export const uploadImgPizza = (req: Request): string => {
  * Delete image
  * @param path
  */
-export const deleteImg = (path: string): void => {
+export const deleteImg = (path: string | undefined): void => {
+	if (!path) return;
 	if (dev) fs.unlink(`./public${path}`, () => {});
 	else fs.unlink(`.${path}`, () => {});
 };

@@ -6,13 +6,15 @@ import Swal from "sweetalert2";
 import { login, clearCart, logout, removeFromCart } from "src/actions";
 import { closeModal } from "src/js/Helpers";
 
-import { IPizza, State } from "src/interfaces/interfaces";
+import { IPizza, State } from "src/interfaces";
+import { AnyAction } from "redux";
+import AddAdmin from "src/components/Navbar/components/AddAdmin";
 import Modal from "../Modal/Modal";
 import axiosInstance from "../../js/Axios";
 
 import "./Navbar.scss";
 
-const Navbar = (props) => {
+function Navbar(props) {
 	const { user, cart } = props;
 	const [isLogin, setIsLogin] = useState(false);
 	const dispatch = useDispatch();
@@ -108,9 +110,9 @@ const Navbar = (props) => {
 	return (
 		<nav className="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div className="container-fluid">
-				<a className="navbar-brand" href="#">
+				{/* <a className="navbar-brand" href="#">
 					SUPERPIZZA
-				</a>
+				</a> */}
 				<button
 					className="navbar-toggler"
 					type="button"
@@ -124,7 +126,7 @@ const Navbar = (props) => {
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav me-auto mb-2 mb-lg-0">
 						<li className="nav-item">
-							<NavLink exact to="/" title="Accueil" className="nav-link">
+							<NavLink to="/" title="Accueil" className="nav-link">
 								Accueil
 							</NavLink>
 						</li>
@@ -136,7 +138,7 @@ const Navbar = (props) => {
 							</li>
 						)}
 						<li className="nav-item">
-							<NavLink exact to="/use-case" title="Accueil" className="nav-link">
+							<NavLink to="/use-case" title="Accueil" className="nav-link">
 								Cas d'utilisation
 							</NavLink>
 						</li>
@@ -223,6 +225,8 @@ const Navbar = (props) => {
 										</div>
 									</Modal>
 								</li>
+
+								<AddAdmin />
 							</>
 						) : (
 							<>
@@ -233,19 +237,19 @@ const Navbar = (props) => {
 									</a>
 									<ul className="dropdown-menu">
 										{cart.length > 0 ? (
-											cart.map((c, i) => {
-												return (
-													<li key={c.name}>
-														<a className="dropdown-item disabled">
-															{c.name} - {c.price}€
-														</a>
-														<a onClick={() => dispatch(removeFromCart(c))} className="btn dropdown-item">
-															<b>Retirer du panier</b>
-														</a>
-														{cart.length - 1 !== i && <hr />}
-													</li>
-												);
-											})
+											cart.map((c, i) => (
+												<li key={c.name}>
+													<a className="dropdown-item disabled">
+														{c.name} - {c.price}€
+													</a>
+													<a
+														onClick={() => dispatch(removeFromCart(c) as unknown as AnyAction)}
+														className="btn dropdown-item">
+														<b>Retirer du panier</b>
+													</a>
+													{cart.length - 1 !== i && <hr />}
+												</li>
+											))
 										) : (
 											<li>
 												<a className="dropdown-item disabled">Votre panier est vide.</a>
@@ -269,7 +273,7 @@ const Navbar = (props) => {
 									</ul>
 								</li>
 								<li className="nav-item">
-									<a className="nav-link" onClick={() => dispatch(logout())}>
+									<a className="nav-link" onClick={() => dispatch(logout() as unknown as AnyAction)}>
 										Deconnexion
 									</a>
 								</li>
@@ -280,7 +284,7 @@ const Navbar = (props) => {
 			</div>
 		</nav>
 	);
-};
+}
 
 const mapStateToProps = (state: State) => ({
 	user: state.user,

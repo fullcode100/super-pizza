@@ -1,3 +1,5 @@
+import { IOrder, IPizza, IUser, State } from "src/interfaces";
+import { AnyAction } from "redux";
 import {
 	CREATE_PIZZA,
 	CREATE_USER,
@@ -19,8 +21,6 @@ import {
 	UPDATE_ORDER,
 } from "../constants/action-types";
 
-import { IOrder, IPizza, IUser, State } from "src/interfaces/interfaces";
-
 const initialState: State = {
 	users: [],
 	orders: [],
@@ -38,8 +38,8 @@ const initialState: State = {
 	},
 };
 
-// Each action will be called manually
-const rootReducer = (state = initialState, action) => {
+// eslint-disable-next-line default-param-last
+const rootReducer = (state = initialState, action: AnyAction) => {
 	const setLoadingToFalse = (key: string) => ({
 		loading: {
 			...state.loading,
@@ -47,80 +47,94 @@ const rootReducer = (state = initialState, action) => {
 		},
 	});
 	if (action.type === SET_USERS) {
-		const users: IUser[] = action.payload.users;
+		const { users } = action.payload;
 
 		return {
 			...state,
 			users,
 			...setLoadingToFalse("users"),
 		};
-	} else if (action.type === SET_ORDERS) {
-		const orders = action.payload.orders;
+	}
+	if (action.type === SET_ORDERS) {
+		const { orders } = action.payload;
 
 		return {
 			...state,
 			...setLoadingToFalse("orders"),
 			orders,
 		};
-	} else if (action.type === UPDATE_ORDER) {
+	}
+	if (action.type === UPDATE_ORDER) {
 		const { order } = action.payload;
-		const orders: IOrder[] = state.orders;
+		const { orders } = state;
 		const index: number = orders.findIndex((o: IOrder) => o._id === order._id);
 		orders[index] = action.payload.order;
 
 		return { ...state, orders };
-	} else if (action.type === ADD_TO_CART) {
+	}
+	if (action.type === ADD_TO_CART) {
 		const cart: IPizza[] = [...state.cart, action.pizza];
 
 		return { ...state, cart };
-	} else if (action.type === CLEAR_CART) {
+	}
+	if (action.type === CLEAR_CART) {
 		return { ...state, cart: [] };
-	} else if (action.type === REMOVE_FROM_CART) {
+	}
+	if (action.type === REMOVE_FROM_CART) {
 		const cart = state.cart.filter((c) => c._id !== action.pizza._id);
 
 		return { ...state, cart };
-	} else if (action.type === SET_PIZZAS) {
-		const pizzas: IPizza[] = action.payload.pizzas;
+	}
+	if (action.type === SET_PIZZAS) {
+		const { pizzas } = action.payload;
 
 		return {
 			...state,
 			pizzas,
 			...setLoadingToFalse("pizzas"),
 		};
-	} else if (action.type === CREATE_PIZZA) {
-		const pizza: IPizza = action.payload.pizza;
+	}
+	if (action.type === CREATE_PIZZA) {
+		const { pizza } = action.payload;
 		const pizzas: IPizza[] = [...state.pizzas, pizza];
 
 		return { ...state, pizzas };
-	} else if (action.type === UPDATE_PIZZA) {
-		const pizzas: IPizza[] = state.pizzas;
+	}
+	if (action.type === UPDATE_PIZZA) {
+		const { pizzas } = state;
 		const index: number = pizzas.findIndex((p: IPizza) => p._id === action.payload.pizza._id);
 		pizzas[index] = action.payload.pizza;
 
 		return { ...state, pizzas };
-	} else if (action.type === DELETE_PIZZA) {
+	}
+	if (action.type === DELETE_PIZZA) {
 		const pizzas = state.pizzas.filter((pizza) => pizza._id !== action.payload.pizza._id);
 
 		return { ...state, pizzas };
-	} else if (action.type === SET_LOGIN) {
-		const user: IUser = action.payload.user;
+	}
+	if (action.type === SET_LOGIN) {
+		const { user } = action.payload;
 
 		return { ...state, user };
-	} else if (action.type === SET_LOGOUT) {
+	}
+	if (action.type === SET_LOGOUT) {
 		return { ...state, user: null };
-	} else if (action.type === CREATE_USER) {
-		const user: IUser = action.payload.user;
+	}
+	if (action.type === CREATE_USER) {
+		const { user } = action.payload;
 		const users = [...state.users, user];
 
 		return { ...state, users };
-	} else if (action.type === UPDATE_USER) {
-		const users: IUser[] = state.users;
+	}
+	if (action.type === UPDATE_USER) {
+		const { users } = state;
 		const index = users.findIndex((p: IUser) => p._id === action.payload.user._id);
 
 		users[index] = action.payload.user;
 
 		return { ...state, users };
-	} else if (action.type === DELETE_USER) {
+	}
+	if (action.type === DELETE_USER) {
 		const users = state.users.filter((user) => user._id !== action.payload.user._id);
 
 		return {
@@ -128,16 +142,18 @@ const rootReducer = (state = initialState, action) => {
 			users,
 			...setLoadingToFalse("users"),
 		};
-	} else if (action.type === UPDATE_LOADING) {
-		const key = action.key;
-		const value = action.value;
+	}
+	if (action.type === UPDATE_LOADING) {
+		const { key } = action;
+		const { value } = action;
 		const loading = {
 			...state.loading,
 			[key]: value,
 		};
 
 		return { ...state, loading };
-	} else if (action.type === SET_SETTINGS) {
+	}
+	if (action.type === SET_SETTINGS) {
 		const settings = action.settings || {};
 
 		return {
@@ -145,8 +161,9 @@ const rootReducer = (state = initialState, action) => {
 			settings,
 			...setLoadingToFalse("settings"),
 		};
-	} else if (action.type === UPDATE_SETTING) {
-		const settings = state.settings;
+	}
+	if (action.type === UPDATE_SETTING) {
+		const { settings } = state;
 		const s = action.setting;
 		const index = settings.findIndex((st) => st._id === s._id);
 		settings[index] = {

@@ -1,7 +1,6 @@
 /* eslint-disable global-require */
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const path = require("path");
-const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin"); // installed via npm
 const CopyPlugin = require("copy-webpack-plugin");
 const { BaseHrefWebpackPlugin } = require("base-href-webpack-plugin");
@@ -12,7 +11,7 @@ const APP_DIR = path.resolve(__dirname, "src");
 const PUBLIC_DIR = path.resolve(__dirname, "public");
 const BUILD_DIR = path.resolve(__dirname, "dist");
 const dev = process.env.NODE_ENV === "development";
-const publicPath = dev ? "http://localhost:8080/" : "https://spizz.herokuapp.com/";
+const publicPath = "http://localhost:8080/";
 const MiniCss = {
 	loader: ExtractCssChunks.loader,
 	options: { hmr: dev },
@@ -30,7 +29,11 @@ const loadersCss = [
 	},
 	{
 		loader: "postcss-loader",
-		options: { plugins: () => [require("autoprefixer/lib/autoprefixer")()] },
+		options: {
+			postcssOptions: {
+				plugins: () => [require("autoprefixer/lib/autoprefixer")()],
+			},
+		},
 	},
 ];
 const dts = {
@@ -57,18 +60,26 @@ const Config = {
 			react: path.resolve(__dirname, "node_modules/react"),
 			src: path.resolve(__dirname, "src"),
 		},
+		fallback: {
+			fs: false,
+			net: false,
+			tls: false,
+			dns: false,
+			os: false,
+			path: false,
+		},
 	},
-	entry: { main: ["@babel/polyfill", "react-hot-loader/patch", `${APP_DIR}/index.tsx`] },
+	entry: { main: ["react-hot-loader/patch", `${APP_DIR}/index.tsx`] },
 	devServer: {
-		contentBase: PUBLIC_DIR,
-		publicPath,
+		static: PUBLIC_DIR,
 		historyApiFallback: true,
 		hot: true,
 		host: "localhost",
-		stats: "minimal",
 		port: 8080,
+		open: ["/"],
+		allowedHosts: "all",
 	},
-	devtool: dev ? "eval-cheap-module-source-map" : "none",
+	devtool: dev ? "eval-cheap-module-source-map" : false,
 	module: {
 		rules: [
 			{
@@ -98,10 +109,9 @@ const Config = {
 		}),
 		new HtmlWebPackPlugin({
 			template: path.resolve(__dirname, "public/index.html"),
-			filename: "index.html",
+			injeect: true,
 		}),
 		new BaseHrefWebpackPlugin({ baseHref: "/" }),
-		new webpack.HotModuleReplacementPlugin(),
 	],
 	mode: !dev ? "production" : "development",
 	output: {

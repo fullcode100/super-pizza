@@ -8,10 +8,11 @@ import axiosInstance from "src/js/Axios";
 import { getUsers, deleteUser, createUser, updateUser, updateLoading } from "src/actions";
 import { formatDate, closeModal } from "src/js/Helpers";
 
-import { IUser, State } from "src/interfaces/interfaces";
+import { IUser, State } from "src/interfaces";
+import { AnyAction } from "redux";
 
-const Users = (props) => {
-	const { loading, users } = props;
+function Users(props: any) {
+	const { loading, users } = props as State;
 	const [currentUser, setCurrentUser] = useState<IUser>(null);
 	const [create, setCreate] = useState<boolean>(true);
 	const init = {
@@ -49,7 +50,7 @@ const Users = (props) => {
 			});
 		}
 		setValues(init);
-		dispatch(createUser(data.user));
+		dispatch(createUser(data.user) as unknown as AnyAction);
 		closeModal();
 		return Swal.fire({
 			title: "Succès",
@@ -72,7 +73,7 @@ const Users = (props) => {
 				updateUser({
 					...currentUser,
 					role: values.role,
-				})
+				}) as unknown as AnyAction
 			);
 			Swal.fire({
 				title: "Succès",
@@ -87,8 +88,8 @@ const Users = (props) => {
 			});
 		}
 	};
-	const handleDelete = async (user: IUser) => {
-		return Swal.fire({
+	const handleDelete = async (user: IUser) =>
+		Swal.fire({
 			title: "Suppression",
 			text: `Vous êtes sure de vouloir supprimer l'utilisateur ${user.username} ?`,
 			icon: "warning",
@@ -102,7 +103,7 @@ const Users = (props) => {
 				await axiosInstance()
 					.delete(`/users/delete/${user._id}`)
 					.then(() => {
-						dispatch(deleteUser(user));
+						dispatch(deleteUser(user) as unknown as AnyAction);
 						return Swal.fire({
 							title: "Succès",
 							text: "L'utilisateur à bien été supprimer avec succès.",
@@ -112,13 +113,12 @@ const Users = (props) => {
 					});
 			}
 		});
-	};
 
 	useEffect(() => {
-		dispatch(getUsers());
+		dispatch(getUsers() as unknown as AnyAction);
 	}, []);
 
-	if (loading) return <Loading />;
+	if (loading.users) return <Loading />;
 
 	return (
 		<div className="container">
@@ -263,7 +263,7 @@ const Users = (props) => {
 			</Modal>
 		</div>
 	);
-};
+}
 
 const mapStateToProps = (state: State) => ({
 	loading: state.loading.users,

@@ -1,6 +1,6 @@
 import "./UseCase.scss";
 
-const UseCase = () => {
+function UseCase() {
 	return (
 		<div className="container" id="use-case">
 			<div className="row">
@@ -35,6 +35,6 @@ const UseCase = () => {
 			</div>
 		</div>
 	);
-};
+}
 
 export default UseCase;

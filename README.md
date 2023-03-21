@@ -2,29 +2,15 @@
 
 ## STACK
 
-ReactJS, Redux, Redux-Thunk, React-Router, Webpack (Dev & Build), Javascript (ES6) - Typescript, NodeJS (ExpressJS), Mongoose, Mongodb, Axios, SCSS, [...]
-
-## LIVE DEMO
-
-> https://spizz.herokuapp.com/
-
-## Identifications
-
-### Admins
-
-- **Email**: admin@sp.com
-- **Password**: root
-
-### Users
-
- - **Email**: user@mail.com
-- **Password**: root
+ReactJS, Redux, Redux-Thunk, React-Router, Webpack, JS (ES6) - Typescript, NodeJS (ExpressJS), Mongoose, Mongodb, Axios, SCSS, [...]
 
 ## Database
 
 You can create a account on mongodb cloud, it's free !
 
 > https://cloud.mongodb.com/
+
+Create tables if necessary (**orders**,**pizzas**,**settings**,**users**)
 
 SCREENSHOT: **[HERE](https://drive.google.com/file/d/1X8Vnb_ZMiI2OATm6C-sYE-q-nwmDmPz9/view?usp=sharing)**
 
@@ -56,8 +42,9 @@ SCREENSHOT: **[HERE](https://drive.google.com/file/d/1X8Vnb_ZMiI2OATm6C-sYE-q-nw
 
 *Don't forget to rename .env.example to .env and update content*
 
-- Update **MONGODB_URI** var in .env file (<[rootDir]>/server/.env)
+- Update **MONGODB_URI / MONGODB_NAME** vars in .env file (<[rootDir]>/server/.env)
 - Create root user with admin rôle in your database (users table) - See User model (<[rootDir]>/server/models/User.ts)
+- You can also use UI (A button was added for the test)
 
 #### Dev (client)
 

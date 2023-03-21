@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
+import { IOrder } from "../../src/interfaces";
 
 const { Schema } = mongoose;
 
-const orderSchema = new mongoose.Schema(
+const orderSchema = new mongoose.Schema<IOrder>(
 	{
-		// _id: Schema.Types.ObjectId,
 		n_order: Schema.Types.String,
 		status: Schema.Types.Mixed,
 		user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -18,6 +18,7 @@ const orderSchema = new mongoose.Schema(
 	}
 );
 
-const Order = mongoose.model("Order", orderSchema);
+const Order = mongoose.model<IOrder>("Order", orderSchema);
 
+export { orderSchema };
 export default Order;

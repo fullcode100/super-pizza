@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const dev = process.env.NODE_ENV === "development";
-const baseURL = dev ? `http://localhost:${process.env.PORT || 3000}` : "https://spizz.herokuapp.com/";
+const baseURL = "http://localhost:3000";
 
 const axiosInstance = (config: AxiosRequestConfig = {}) => {
 	let defaultConfig: AxiosRequestConfig = {
@@ -27,9 +26,7 @@ const axiosInstance = (config: AxiosRequestConfig = {}) => {
 	const instance = axios.create(defaultConfig);
 
 	instance.interceptors.response.use(
-		(response) => {
-			return response;
-		},
+		(response) => response,
 		(error) => {
 			// console.warn("Error status", error.response.status);
 			// return Promise.reject(error)

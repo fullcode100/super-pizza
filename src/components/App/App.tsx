@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useDispatch, connect } from "react-redux";
 
 import Loading from "src/components/Loading/Loading";
@@ -11,9 +11,9 @@ import Navbar from "src/components/Navbar/Navbar";
 
 import { login, updateLoading } from "src/actions";
 import { getCurrentUser } from "src/js/Helpers";
-import { State } from "src/interfaces/interfaces";
+import { State } from "src/interfaces";
 
-const App = (props: State) => {
+function App(props: State) {
 	const { loading } = props;
 	const dispatch = useDispatch();
 
@@ -28,20 +28,22 @@ const App = (props: State) => {
 			const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
 			const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
 
-			tooltipTriggerList.map((tooltipTriggerEl) => {
-				return new (window as any).bootstrap.Tooltip(tooltipTriggerEl, {
-					delay: { show: 200, hide: 100 },
-				});
-			});
-			popoverTriggerList.map((popoverTriggerEl) => {
-				return new (window as any).bootstrap.Popover(popoverTriggerEl, {
-					delay: { show: 200, hide: 100 },
-				});
-			});
+			tooltipTriggerList.map(
+				(tooltipTriggerEl) =>
+					new (window as any).bootstrap.Tooltip(tooltipTriggerEl, {
+						delay: { show: 200, hide: 100 },
+					})
+			);
+			popoverTriggerList.map(
+				(popoverTriggerEl) =>
+					new (window as any).bootstrap.Popover(popoverTriggerEl, {
+						delay: { show: 200, hide: 100 },
+					})
+			);
 		}, 1500);
 	}, []);
 
-	if (loading) return <Loading />;
+	if (loading.app) return <Loading />;
 
 	return (
 		<>
@@ -49,21 +51,24 @@ const App = (props: State) => {
 
 			<div className="container mt-4">
 				<div className="alert alert-info text-center" role="alert">
-					Ce projet est plus axé sur la partie serveur (NodeJS). Cette interface permet de tester et interagir avec notre API. Les (fakes)
-					données sont enregistrées dans une base de données Mongodb.
+					Une app <b>ReactJS</b> qui intéragit avec une <b>API Rest</b> basé sur{" "}
+					<b>
+						NodeJS (<em>express</em>)
+					</b>
+					. Les données (fakes) sont enregistrées dans une base de données <b>Mongodb</b>.
 				</div>
 			</div>
 
-			<Switch>
-				<Route exact path="/" component={Home} />
-				<Route path="/dashboard" component={(routeProps) => <Dashboard {...routeProps} />} />
-				<Route path="/use-case" component={(routeProps) => <UseCase {...routeProps} />} />
-			</Switch>
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/dashboard" element={<Dashboard />} />
+				<Route path="/use-case" element={<UseCase />} />
+			</Routes>
 
 			<Footer />
 		</>
 	);
-};
+}
 
 const mapStateToProps = (state: State) => ({
 	loading: state.loading.app,
@@ -71,4 +76,4 @@ const mapStateToProps = (state: State) => ({
 });
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App as any);

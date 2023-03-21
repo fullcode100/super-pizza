@@ -5,11 +5,11 @@ import Swal from "sweetalert2";
 import Loading from "src/components/Loading/Loading";
 import { getPizzas, addToCart } from "src/actions";
 import { isConnected, truncate } from "src/js/Helpers";
-import { IPizza, State } from "src/interfaces/interfaces";
+import { IPizza, State } from "src/interfaces";
 
 import "./Home.scss";
 
-const Home = (props) => {
+function Home(props) {
 	const { loading, pizzas } = props;
 	const dispatch = useDispatch();
 	const handleClick = (pizza: IPizza) => {
@@ -36,59 +36,55 @@ const Home = (props) => {
 			<h3>Pizzas </h3>
 
 			<div className="row" id="pizzas-container">
-				{pizzas.map((pizza: IPizza) => {
-					return (
-						<div key={pizza._id} className="col-4">
-							<div className="card" style={{ width: "18rem" }}>
-								<img src={pizza.img_path} className="card-img-top" alt={pizza.name} />
-								<div className="card-body">
-									<h5 className="card-title">Pizza: {pizza.name}</h5>
-									<p className="card-text">
-										<span data-bs-toggle="tooltip" data-bs-placement="top" title={pizza.description}>
-											{truncate(pizza.description, 10, "...")}
-										</span>
-									</p>
+				{pizzas.map((pizza: IPizza) => (
+					<div key={pizza._id} className="col-4">
+						<div className="card" style={{ width: "18rem" }}>
+							<img src={pizza.img_path} className="card-img-top" alt={pizza.name} />
+							<div className="card-body">
+								<h5 className="card-title">Pizza: {pizza.name}</h5>
+								<p className="card-text">
+									<span data-bs-toggle="tooltip" data-bs-placement="top" title={pizza.description}>
+										{truncate(pizza.description, 10, "...")}
+									</span>
+								</p>
 
-									<hr />
+								<hr />
 
-									<table>
-										<tbody>
-											<tr>
-												<td>
-													<>
-														<b>Qty:</b>
-													</>
-												</td>
-												<td> {pizza.qty} </td>
-											</tr>
-										</tbody>
-									</table>
+								<table>
+									<tbody>
+										<tr>
+											<td>
+												<b>Qty:</b>
+											</td>
+											<td> {pizza.qty} </td>
+										</tr>
+									</tbody>
+								</table>
 
-									{isConnected() ? (
-										<a
-											onClick={() => handleClick(pizza)}
-											data-bs-toggle="popover"
-											title="Panier"
-											data-bs-content={`${pizza.name} à été ajoutée au panier !`}
-											data-bs-placement="top"
-											data-bs-trigger="focus"
-											className="btn btn-success">
-											Ajouter au panier
-										</a>
-									) : (
-										<a onClick={() => handleClick(pizza)} className="btn btn-success">
-											Ajouter au panier
-										</a>
-									)}
-								</div>
+								{isConnected() ? (
+									<a
+										onClick={() => handleClick(pizza)}
+										data-bs-toggle="popover"
+										title="Panier"
+										data-bs-content={`${pizza.name} à été ajoutée au panier !`}
+										data-bs-placement="top"
+										data-bs-trigger="focus"
+										className="btn btn-success">
+										Ajouter au panier
+									</a>
+								) : (
+									<a onClick={() => handleClick(pizza)} className="btn btn-success">
+										Ajouter au panier
+									</a>
+								)}
 							</div>
 						</div>
-					);
-				})}
+					</div>
+				))}
 			</div>
 		</div>
 	);
-};
+}
 
 const mapStateToProps = (state: State) => ({
 	loading: state.loading.pizzas,

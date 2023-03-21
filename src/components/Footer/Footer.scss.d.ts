@@ -1,2 +1,1 @@
-// This file is generated automatically 
-
+// This file is generated automatically

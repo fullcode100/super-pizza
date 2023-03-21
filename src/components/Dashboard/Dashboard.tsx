@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
 import { isAdmin } from "src/js/Helpers";
-import { State } from "src/interfaces/interfaces";
+import { State } from "src/interfaces";
+import { useLocation, useNavigate } from "react-router-dom";
 import Users from "./components/Users";
 import Orders from "./components/Orders";
 import Pizzas from "./components/Pizzas";
@@ -11,18 +12,17 @@ import MySpace from "./components/MySpace";
 
 import "./Dashboard.scss";
 
-const Dashboard = (props) => {
+function Dashboard(props) {
+	const location = useLocation();
+	const navigate = useNavigate();
 	const { user } = props;
 	const [activeTab, setActiveTab] = useState("myspace");
-	const { location } = props;
 	const { pathname } = location;
 	const updateUrlHashTab = (hash: string) => {
-		props.history.push({ pathname, hash });
+		navigate(pathname);
 		setActiveTab(hash);
 	};
-	const activeClassTab = (hash: string, showClass: boolean = false): string => {
-		return hash === activeTab ? `${showClass && "show"} active` : "";
-	};
+	const activeClassTab = (hash: string, showClass: boolean = false): string => (hash === activeTab ? `${showClass && "show"} active` : "");
 	const displayIfAdmin: boolean = user && isAdmin(user);
 
 	useEffect(() => {
@@ -113,33 +113,33 @@ const Dashboard = (props) => {
 			<div className="tab-content" id="myTabContent">
 				{user && (
 					<div className={`tab-pane fade ${activeClassTab("myspace", true)}`} id="myspace" role="tabpanel" aria-labelledby="myspace-tab">
-						<MySpace />
+						{activeTab === "myspace" && <MySpace />}
 					</div>
 				)}
 				<div className={`tab-pane fade ${activeClassTab("orders", true)}`} id="orders" role="tabpanel" aria-labelledby="orders-tab">
-					<Orders />
+					{activeTab === "orders" && <Orders />}
 				</div>
 				{displayIfAdmin && (
 					<>
 						<div className={`tab-pane fade ${activeClassTab("pizzas", true)}`} id="pizzas" role="tabpanel" aria-labelledby="pizzas-tab">
-							<Pizzas />
+							{activeTab === "pizzas" && <Pizzas />}
 						</div>
 						<div className={`tab-pane fade ${activeClassTab("users", true)}`} id="users" role="tabpanel" aria-labelledby="users-tab">
-							<Users />
+							{activeTab === "users" && <Users />}
 						</div>
 						<div
 							className={`tab-pane fade ${activeClassTab("settings", true)}`}
 							id="settings"
 							role="tabpanel"
 							aria-labelledby="settings-tab">
-							<Settings />
+							{activeTab === "settings" && <Settings />}
 						</div>
 					</>
 				)}
 			</div>
 		</div>
 	);
-};
+}
 
 const mapStateToProps = (state: State) => ({
 	user: state.user,

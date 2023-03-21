@@ -5,11 +5,9 @@ import Order from "../models/Order";
 import Pizza from "../models/Pizza";
 import Settings from "../models/Setting";
 
-const dbConnect = () => {
-	return mongoose.connect(process.env.MONGODB_URI, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-		useFindAndModify: false,
+const dbConnect = async () => {
+	await mongoose.connect(process.env.MONGODB_URI as string, {
+		dbName: process.env.MONGODB_NAME,
 	});
 };
 

@@ -19,15 +19,11 @@ app.use(fileUpload({ createParentPath: true }) as any);
 
 if (!dev) app.use(express.static(path.join(`${__dirname}/../`)));
 
-/* -------------------------------------------------------------------------- */
-/*                                   ROUTES                                   */
-/* -------------------------------------------------------------------------- */
 app.use(require("./extras/routes"));
-/* -------------------------------------------------------------------------- */
 
-dbConnect().then(() => {
-	app.listen(port, () => console.log(`Server listen on PORT ${port}`));
-});
+dbConnect().catch((err) => console.log(err));
+
+app.listen(port, () => console.log(`Server listen on PORT ${port}`));
 
 export { dev };
 export default app;

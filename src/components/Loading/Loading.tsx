@@ -1,6 +1,6 @@
 import "./Loading.scss";
 
-const Loading = () => {
+function Loading() {
 	return (
 		<div className="lds-default">
 			<div />
@@ -17,6 +17,6 @@ const Loading = () => {
 			<div />
 		</div>
 	);
-};
+}
 
 export default Loading;

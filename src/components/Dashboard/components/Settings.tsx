@@ -8,10 +8,11 @@ import { updateLoading, getSettings, updateSettings } from "src/actions";
 import { settingsTrans, closeModal } from "src/js/Helpers";
 import Loading from "src/components/Loading/Loading";
 
-import { State } from "src/interfaces/interfaces";
+import { State } from "src/interfaces";
+import { AnyAction } from "redux";
 
-const Settings = (props) => {
-	const { loading, settings } = props;
+function Settings(props: any) {
+	const { loading, settings } = props as State;
 	const [setting, setSetting] = useState({});
 	const [values, setValues] = useState({});
 	const handleSetting = (s: {}) => {
@@ -51,10 +52,10 @@ const Settings = (props) => {
 	};
 
 	useEffect(() => {
-		dispatch(getSettings());
+		dispatch(getSettings() as unknown as AnyAction);
 	}, []);
 
-	if (loading) return <Loading />;
+	if (loading.settings) return <Loading />;
 
 	return (
 		<div className="container">
@@ -121,10 +122,10 @@ const Settings = (props) => {
 			</div>
 		</div>
 	);
-};
+}
 
 const mapStateToProps = (state: State) => ({
-	loading: state.loading.settings,
+	loading: state.loading,
 	settings: state.settings,
 });
 const mapDispatchToProps = {};

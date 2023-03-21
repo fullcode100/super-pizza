@@ -8,10 +8,11 @@ import axiosInstance from "src/js/Axios";
 import { getPizzas, deletePizza, createPizza, updatePizza, updateLoading } from "src/actions";
 import { formatDate, closeModal, truncate } from "src/js/Helpers";
 
-import { IPizza, State } from "src/interfaces/interfaces";
+import { IPizza, State } from "src/interfaces";
+import { AnyAction } from "redux";
 
-const Pizzas = (props) => {
-	const { loading, pizzas } = props;
+function Pizzas(props: any) {
+	const { loading, pizzas } = props as State;
 	const [create, setCreate] = useState<boolean>(true);
 	const init = {
 		name: "",
@@ -48,7 +49,7 @@ const Pizzas = (props) => {
 		if (price) dataForm.set("price", price);
 		if (description) dataForm.set("description", description);
 		if (qty) dataForm.set("qty", `${qty}`);
-		if (!create) dataForm.set("oldImgPath", currentPizza.img_path);
+		// if (!create) dataForm.set("oldImgPath", currentPizza.img_path);
 	};
 	const handleCreate = async () => {
 		dispatch(updateLoading("pizzas", true));
@@ -72,7 +73,7 @@ const Pizzas = (props) => {
 			});
 		}
 		setValues(init);
-		dispatch(createPizza(data.pizza));
+		dispatch(createPizza(data.pizza) as unknown as AnyAction);
 		closeModal();
 		return Swal.fire({
 			title: "Succès",
@@ -100,7 +101,7 @@ const Pizzas = (props) => {
 					...currentPizza,
 					...values,
 					...data.pizza,
-				})
+				}) as unknown as AnyAction
 			);
 			Swal.fire({
 				title: "Succès",
@@ -130,7 +131,7 @@ const Pizzas = (props) => {
 				await axiosInstance()
 					.delete(`/pizzas/delete/${pizza["_id"]}`)
 					.then(() => {
-						dispatch(deletePizza(pizza));
+						dispatch(deletePizza(pizza) as unknown as AnyAction);
 						return Swal.fire({
 							title: "Succès",
 							text: "La pizza à bien été supprimée avec succès.",
@@ -143,10 +144,10 @@ const Pizzas = (props) => {
 	};
 
 	useEffect(() => {
-		dispatch(getPizzas());
+		dispatch(getPizzas() as unknown as AnyAction);
 	}, []);
 
-	if (loading) return <Loading />;
+	if (loading.pizzas) return <Loading />;
 
 	return (
 		<div className="container">
@@ -183,54 +184,52 @@ const Pizzas = (props) => {
 							</tr>
 						</thead>
 						<tbody>
-							{pizzas.map((pizza: IPizza, i) => {
-								return (
-									<tr key={pizza["_id"]}>
-										<td className="table-primary">
-											<div>{i + 1}</div>
-										</td>
-										<td>
-											<div>{pizza.name}</div>
-										</td>
-										<td>
-											<div>{pizza.price}</div>
-										</td>
-										<td>
-											<div>{pizza.qty}</div>
-										</td>
-										<td>
-											<div data-bs-toggle="tooltip" data-bs-placement="top" title={pizza.description}>
-												{truncate(pizza.description, 5, "...")}
-											</div>
-										</td>
-										<td>
-											<div>
-												<img src={pizza.img_path} alt={pizza.name} width="90" />
-											</div>
-										</td>
-										<td>
-											<div>{formatDate(pizza.created_at)}</div>
-										</td>
-										<td className="table-warning">
-											<div className="btn-group" role="group" aria-label="Basic example">
-												<button
-													onClick={() => {
-														handlePizza(pizza);
-													}}
-													data-bs-toggle="modal"
-													data-bs-target="#pizzaModal"
-													type="button"
-													className="btn btn-secondary">
-													Modifier
-												</button>
-												<button type="button" onClick={() => handleDelete(pizza)} className="btn btn-danger">
-													Supprimer
-												</button>
-											</div>
-										</td>
-									</tr>
-								);
-							})}
+							{pizzas.map((pizza: IPizza, i) => (
+								<tr key={pizza["_id"]}>
+									<td className="table-primary">
+										<div>{i + 1}</div>
+									</td>
+									<td>
+										<div>{pizza.name}</div>
+									</td>
+									<td>
+										<div>{pizza.price}</div>
+									</td>
+									<td>
+										<div>{pizza.qty}</div>
+									</td>
+									<td>
+										<div data-bs-toggle="tooltip" data-bs-placement="top" title={pizza.description}>
+											{truncate(pizza.description, 5, "...")}
+										</div>
+									</td>
+									<td>
+										<div>
+											<img src={pizza.img_path} alt={pizza.name} width="90" />
+										</div>
+									</td>
+									<td>
+										<div>{formatDate(pizza.created_at)}</div>
+									</td>
+									<td className="table-warning">
+										<div className="btn-group" role="group" aria-label="Basic example">
+											<button
+												onClick={() => {
+													handlePizza(pizza);
+												}}
+												data-bs-toggle="modal"
+												data-bs-target="#pizzaModal"
+												type="button"
+												className="btn btn-secondary">
+												Modifier
+											</button>
+											<button type="button" onClick={() => handleDelete(pizza)} className="btn btn-danger">
+												Supprimer
+											</button>
+										</div>
+									</td>
+								</tr>
+							))}
 						</tbody>
 					</table>
 				)}
@@ -296,10 +295,10 @@ const Pizzas = (props) => {
 			</Modal>
 		</div>
 	);
-};
+}
 
 const mapStateToProps = (state: State) => ({
-	loading: state.loading.pizzas,
+	loading: state.loading,
 	pizzas: state.pizzas,
 });
 const mapDispatchToProps = {};

@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-import { IOrder, IPizza, IUser } from "src/interfaces/interfaces";
+import { IOrder, IPizza, IUser } from "src/interfaces";
 import axiosInstance from "../js/Axios";
 import { isAdmin } from "../js/Helpers";
 
@@ -86,7 +86,8 @@ export const login = (user: IUser, showModal: boolean = true) => {
 	};
 };
 
-export const logout = () => async (dispatch) => {
+// eslint-disable-next-line no-unused-vars
+export const logout = () => async (dispatch: (arg0: any) => void) => {
 	await axiosInstance()
 		.post("/logout")
 		.then((response) => {
@@ -144,11 +145,9 @@ export const removeFromCart = (pizza: IPizza) => async (dispatch) => {
 /**
  * Clear cart
  */
-export const clearCart = () => {
-	return {
-		type: CLEAR_CART,
-	};
-};
+export const clearCart = () => ({
+	type: CLEAR_CART,
+});
 
 /**
  * Get orders list
@@ -236,13 +235,11 @@ export const deletePizza = (pizza: IPizza) => async (dispatch) => {
 
 /* -------------------------------------------------------------------------- */
 
-export const updateLoading = (key: string, value: boolean) => {
-	return {
-		type: UPDATE_LOADING,
-		key,
-		value,
-	};
-};
+export const updateLoading = (key: string, value: boolean) => ({
+	type: UPDATE_LOADING,
+	key,
+	value,
+});
 
 /* -------------------------------------------------------------------------- */
 /*                                  SETTINGS                                  */
@@ -261,9 +258,7 @@ export const getSettings = () => async (dispatch) => {
 		});
 };
 
-export const updateSettings = (setting) => {
-	return {
-		type: UPDATE_SETTING,
-		setting,
-	};
-};
+export const updateSettings = (setting) => ({
+	type: UPDATE_SETTING,
+	setting,
+});
