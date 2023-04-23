@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import path from "path";
 
-const JWT_TOKEN_SECRET = process.env.JWT_TOKEN_SECRET as string;
+require("dotenv").config({ path: path.join(__dirname, "/../.env") });
 
-const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+const JWT_TOKEN_SECRET = process.env["JWT_TOKEN_SECRET"] as string;
+
+export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
 	const authHeader = req.headers["authorization"];
 	const token = authHeader && authHeader.split(" ")[1];
 
@@ -21,8 +24,4 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
 	});
 };
 
-const generateAccessToken = (email: string): string => {
-	return jwt.sign({ email }, JWT_TOKEN_SECRET, { expiresIn: "6h" });
-};
-
-export { authenticateToken, generateAccessToken };
+export const generateAccessToken = (email: string): string => jwt.sign({ email }, JWT_TOKEN_SECRET, { expiresIn: "6h" });

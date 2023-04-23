@@ -5,11 +5,12 @@ import Swal from "sweetalert2";
 import Modal from "src/components/Modal/Modal";
 import Loading from "src/components/Loading/Loading";
 import axiosInstance from "src/js/Axios";
-import { getPizzas, deletePizza, createPizza, updatePizza, updateLoading } from "src/actions";
 import { formatDate, closeModal, truncate } from "src/js/Helpers";
 
 import { IPizza, State } from "src/interfaces";
 import { AnyAction } from "redux";
+import { createPizza, deletePizza, getPizzas, updatePizza } from "src/redux/actions/pizzas";
+import { updateLoading } from "src/redux/actions";
 
 function Pizzas(props: any) {
 	const { loading, pizzas } = props as State;

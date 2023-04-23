@@ -4,7 +4,7 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import Thunk from "redux-thunk";
 
-import rootReducer from "./reducers/index";
+import rootReducer from "./redux";
 import App from "./components/App/App";
 
 import "sweetalert2/src/sweetalert2.scss";

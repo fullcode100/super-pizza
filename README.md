@@ -1,38 +1,36 @@
-# PIZZAs
+# PIZZA's
 
 ### PREREQUISITES
 
 - **NodeJS**: *18.12.1*
 - **Yarn**: *1.22.19*
-- Or **NPM**: *8.19.2*
 
 ### STACK
 
-ReactJS, Redux, Redux-Thunk, React-Router, Webpack, JS (ES6) - Typescript, NodeJS (ExpressJS), Mongoose, Mongodb, Axios, SCSS, Docker [...]
+ReactJS, Redux, Redux-Thunk, React-Router, Webpack, Axios, Typescript / JS (ES6), SCSS, Bootstrap v5.2.3, Node (ExpressJS), Mongoose, Mongodb, Docker...
 
 ### Notes
 
 -   **Espace admin**
 
-    -   Mon espace (U) - Afficher les informations relatives au compte connecté
-    -   Utilisateurs (CRUD) - Afficher la liste des utilisateurs
-        -   Un admin peut créer un nouvel utilisateur admin
-    -   Commandes (RUD) - Afficher la liste des commandes (Global)
-    -   Pizza (CRUD) - Afficher la liste des pizzas
-    -   Paramètres (RU) - Afficher la liste des paramètres
+    - My Space (U) - View information about your account
+    - Users (CRUD) - Display the list of users
+        - An admin can create a new admin user
+    - Commands (RUD) - Display the list of commands (Global)
+    - Pizza (CRUD) - Display the list of pizzas
+    - Parameters (RU) - Display the list of parameters
 
--   **Espace utilisateur**
+- **Espace utilisateur**
 
-    -   Mon espace (U) - Afficher les informations relatives au compte connecté
-    -   Commandes (RUD) - Afficher la liste des commandes
+    - My Space (U) - View information about your account
+    - Orders (RUD) - View the list of orders
 
--   **Espace public**
-    -   Chaque utilisateur à besoin d'un compte pour pouvoir passer une commande
-    -   Affichage des pizza (Nom, prix, image...)
-        -   Ajouter au panier (S'il y a déja 4 (ou modifiable) commandes en cours, passer le status de la commande
-            en 'waiting' avant l'enregistrement sinon le status est automatiquement mis en 'in_progress'"). Si le status est à 'waiting', l'admin à la possibilité de le modifier manuellement depuis son espace.
-        -   Annule une commande (Depuis le panier)
-        -   Valider le panier (Depuis le panier)
+- **Espace public**
+    - Each user needs an account to place an order
+    - Display of pizza (Name, price, image...)
+        - Add to cart (If there are already 4 (or changeable) orders in progress, set the status of the order to 'waiting' before saving. in 'waiting' before the registration otherwise the status is automatically set to 'in_progress'"). If the status is set to 'waiting', the admin has the possibility to modify it manually from his space.
+        - Cancel an order (From the cart)
+        - Validate the basket (From the basket)
 
 
 ### Database
@@ -45,6 +43,23 @@ or use docker present in this repo:
 ```sh
 cd docker
 docker-compose up -d
+```
+
+##### Structures (To create manually pizza in MongoDB from MongoShell or from UI)
+
+```json
+{
+	"pizza": {
+		_id: ObjectId()
+		name: String
+		price: String
+		qty: Int32
+		description: String
+		img_path: String
+		created_at: Date
+		updated_at: Date
+	}
+}
 ```
 
 ### Setup
@@ -60,30 +75,30 @@ docker-compose up -d
 #### Dev (client)
 
 ```sh
-yarn start:client (or npm run start:client)
+yarn start:client
 ```
 
 #### Dev (server)
 
 ```sh
-yarn start:server (or npm run start:server)
+yarn start:server
 ```
 
 #### Prod (client)
 
 ```sh
-yarn build:client (or npm run build:client)
+yarn build:client
 ```
 
 #### Prod (server)
 
 ```sh
-yarn build:server (or npm run build:server)
+yarn build:server
 ```
 
 ### Lint and lint fix
 
 ```sh
-yarn lint (or npm run lint)
-yarn lint:fix (or npm run lint:fix)
+yarn lint
+yarn lint:fix
 ```

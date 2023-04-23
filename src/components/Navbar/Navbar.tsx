@@ -3,18 +3,19 @@ import { NavLink } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
-import { login, clearCart, logout, removeFromCart } from "src/actions";
 import { closeModal } from "src/js/Helpers";
 
 import { IPizza, State } from "src/interfaces";
 import { AnyAction } from "redux";
 import AddAdmin from "src/components/Navbar/components/AddAdmin";
+import { login, logout } from "src/redux/actions/auth";
+import { clearCart, removeFromCart } from "src/redux/actions/orders";
 import Modal from "../Modal/Modal";
 import axiosInstance from "../../js/Axios";
 
 import "./Navbar.scss";
 
-function Navbar(props) {
+function Navbar(props: State) {
 	const { user, cart } = props;
 	const [isLogin, setIsLogin] = useState(false);
 	const dispatch = useDispatch();
@@ -23,22 +24,21 @@ function Navbar(props) {
 		email: "",
 		password: "",
 	} as any);
-	const handleChange = (evt) => {
-		const { value } = evt.target;
-		const { name } = evt.target;
+	const total = cart.reduce((n, { price }) => n + price, "");
+	const handleChange = (evt: any) => {
+		const { name, value } = evt.target;
 
 		setValues({ ...values, [name]: value });
 	};
 	const handleSubmit = async () => {
 		const path = isLogin ? "/login" : "/registration";
-		const response = await axiosInstance().post(path, {
+		const response = await axiosInstance().post(`/auth${path}`, {
 			user: { ...values, role: "Utilisateur" },
 		});
 		const { data } = response;
+		const { token, message } = data;
 
 		if (!isLogin) {
-			const { message } = data;
-
 			if (message === "User already exist") {
 				return Swal.fire({
 					title: "Erreur",
@@ -61,9 +61,6 @@ function Navbar(props) {
 			});
 		}
 
-		const { message } = data;
-		const { token } = data;
-
 		if (message !== "User logged in") {
 			return Swal.fire({
 				title: "Erreur",
@@ -77,7 +74,6 @@ function Navbar(props) {
 		dispatch(login(data.user));
 		return closeModal();
 	};
-	const total = cart.reduce((n, { price }) => n + price, "");
 	const handleOrder = async () => {
 		const pizzasIds = cart.map((c: IPizza) => c._id);
 		const response = await axiosInstance().post("/orders/create", {
@@ -110,9 +106,6 @@ function Navbar(props) {
 	return (
 		<nav className="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div className="container-fluid">
-				{/* <a className="navbar-brand" href="#">
-					SUPERPIZZA
-				</a> */}
 				<button
 					className="navbar-toggler"
 					type="button"
@@ -137,11 +130,6 @@ function Navbar(props) {
 								</NavLink>
 							</li>
 						)}
-						<li className="nav-item">
-							<NavLink to="/use-case" title="Accueil" className="nav-link">
-								Cas d'utilisation
-							</NavLink>
-						</li>
 					</ul>
 
 					<ul className="navbar-nav ml-auto">

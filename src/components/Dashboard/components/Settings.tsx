@@ -4,12 +4,13 @@ import Swal from "sweetalert2";
 
 import Modal from "src/components/Modal/Modal";
 import axiosInstance from "src/js/Axios";
-import { updateLoading, getSettings, updateSettings } from "src/actions";
 import { settingsTrans, closeModal } from "src/js/Helpers";
 import Loading from "src/components/Loading/Loading";
 
 import { State } from "src/interfaces";
 import { AnyAction } from "redux";
+import { updateLoading } from "src/redux/actions";
+import { getSettings, updateSettings } from "src/redux/actions/settings";
 
 function Settings(props: any) {
 	const { loading, settings } = props as State;

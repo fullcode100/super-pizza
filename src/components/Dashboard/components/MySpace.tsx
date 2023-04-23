@@ -4,11 +4,12 @@ import Swal from "sweetalert2";
 
 import Modal from "src/components/Modal/Modal";
 import axiosInstance from "src/js/Axios";
-import { login, updateLoading } from "src/actions";
 import { closeModal } from "src/js/Helpers";
 import Loading from "src/components/Loading/Loading";
 
 import { IUser, State } from "src/interfaces";
+import { updateLoading } from "src/redux/actions";
+import { login } from "src/redux/actions/auth";
 
 function MySpace(props) {
 	const { loading, user } = props;

@@ -3,14 +3,15 @@ import { connect, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
 import Loading from "src/components/Loading/Loading";
-import { getPizzas, addToCart } from "src/actions";
 import { isConnected, truncate } from "src/js/Helpers";
 import { IPizza, State } from "src/interfaces";
 
 import "./Home.scss";
 import { AnyAction } from "redux";
+import { addToCart } from "src/redux/actions/orders";
+import { getPizzas } from "src/redux/actions/pizzas";
 
-function Home(props) {
+function Home(props: any) {
 	const { loading, pizzas } = props;
 	const dispatch = useDispatch();
 	const handleClick = (pizza: IPizza) => {
@@ -34,11 +35,13 @@ function Home(props) {
 
 	return (
 		<div id="home" className="container">
-			<h3>Pizzas </h3>
+			<h3>Liste des PIZZAs</h3>
 
 			<div className="row" id="pizzas-container">
 				{pizzas.length <= 0 ? (
-					<div className="no-content">Aucune pizza à afficher</div>
+					<div className="alert alert-primary" role="alert">
+						Aucune pizza à afficher
+					</div>
 				) : (
 					pizzas.map((pizza: IPizza) => (
 						<div key={pizza._id} className="col-4">

@@ -5,8 +5,8 @@ import Modal from "src/components/Modal/Modal";
 import axiosInstance from "src/js/Axios";
 
 /**
- * WARN: Créer avec pour seul but de pouvoir créer un administrateur lors d'une première installation
- * WARN: Dans la vraie vie, cela se fera autrement.
+ * WARN: Créer avec pour seul but de pouvoir créer un administrateur manuellement la première fois en mode test, pas en *
+ * prod
  */
 function AddAdmin() {
 	const [values, setValues] = useState({
@@ -21,9 +21,10 @@ function AddAdmin() {
 		setValues({ ...values, [name]: value });
 	};
 	const handleSubmit = async () => {
-		const path = "/admins/create";
+		const path = "/users/create";
 		const response = await axiosInstance().post(path, {
 			user: values,
+			isAdmin: true,
 		});
 		const { data } = response;
 		const { message } = data;

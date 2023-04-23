@@ -1,8 +1,10 @@
 {
 	"name": "super-pizza",
-	"version": "1.0.1",
+	"version": "1.0.0",
 	"license": "MIT",
-	"main": "src/index.ts",
+	"author": {
+		"name": "Morel Cissé"
+	},
 	"scripts": {
 		"start:client": "NODE_ENV=development webpack-dev-server --config webpack.config.js --mode development",
 		"start:server": "NODE_ENV=development nodemon",

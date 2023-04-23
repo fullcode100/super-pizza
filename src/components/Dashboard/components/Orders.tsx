@@ -5,11 +5,11 @@ import Swal from "sweetalert2";
 import Modal from "src/components/Modal/Modal";
 import Loading from "src/components/Loading/Loading";
 import axiosInstance from "src/js/Axios";
-import { getOrders, updateOrder } from "src/actions";
 import { getCurrentUser, truncate, formatDate, closeModal, orderStatusTrans, isAdmin } from "src/js/Helpers";
 
 import { State, IOrder } from "src/interfaces";
 import { AnyAction } from "redux";
+import { getOrders, updateOrder } from "src/redux/actions/orders";
 
 function Orders(props: any) {
 	const { loading, orders, user } = props as State;

@@ -4,7 +4,9 @@ import bcrypt from "bcrypt";
 import { Request } from "express";
 import { UploadedFile } from "express-fileupload";
 
-const dev = process.env.NODE_ENV === "development";
+require("dotenv").config({ path: nodePath.join(__dirname, "/../.env") });
+
+const dev = process.env["NODE_ENV"] === "development";
 
 /**
  *

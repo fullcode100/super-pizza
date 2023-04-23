@@ -1,26 +1,40 @@
 import path from "path";
-import express, { Application } from "express";
+import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import fileUpload from "express-fileupload";
 
 import { dbConnect } from "./extras/mongodb";
+import { authenticateToken } from "./extras/jwt";
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-require("dotenv").config({ path: path.resolve(__dirname, ".env") });
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 
-const app: Application = express();
-const dev: boolean = process.env.NODE_ENV === "development";
-const port = process.env.PORT || 3000;
+const app: express.Express = express();
+const dev: boolean = process.env["NODE_ENV"] === "development";
+const port = process.env["APP_PORT"] || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload({ createParentPath: true }) as any);
 
-if (!dev) app.use(express.static(path.join(`${__dirname}/../`)));
+if (!dev) {
+	app.use(express.static(path.join(`${__dirname}/../`)));
 
-app.use(require("./extras/routes"));
+	app.get("/", (req, res) => {
+		res.sendFile("./index.html", { root: `${__dirname}/../` });
+	});
+}
+
+app.use("/auth", require("./routes/auth"));
+
+app.use("/orders", authenticateToken, require("./routes/orders"));
+
+app.use("/pizzas", require("./routes/pizzas"));
+
+app.use("/settings", authenticateToken, require("./routes/settings"));
+
+app.use("/users", authenticateToken, require("./routes/users"));
 
 dbConnect().catch((err) => console.log(err));
 

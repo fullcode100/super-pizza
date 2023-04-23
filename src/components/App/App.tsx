@@ -4,13 +4,13 @@ import { useDispatch, connect } from "react-redux";
 
 import Loading from "src/components/Loading/Loading";
 import Dashboard from "src/components/Dashboard/Dashboard";
-import UseCase from "src/components/UseCase/UseCase";
 import Home from "src/components/Home/Home";
 import Navbar from "src/components/Navbar/Navbar";
 
-import { login, updateLoading } from "src/actions";
 import { getCurrentUser } from "src/js/Helpers";
 import { State } from "src/interfaces";
+import { updateLoading } from "src/redux/actions";
+import { login } from "src/redux/actions/auth";
 
 function App(props: State) {
 	const { loading } = props;
@@ -51,7 +51,6 @@ function App(props: State) {
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/dashboard" element={<Dashboard />} />
-				<Route path="/use-case" element={<UseCase />} />
 			</Routes>
 		</>
 	);

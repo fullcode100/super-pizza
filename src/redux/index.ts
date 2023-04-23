@@ -19,7 +19,7 @@ import {
 	REMOVE_FROM_CART,
 	CLEAR_CART,
 	UPDATE_ORDER,
-} from "../constants/action-types";
+} from "./constants";
 
 const initialState: State = {
 	users: [],

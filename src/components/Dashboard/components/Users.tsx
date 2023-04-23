@@ -5,11 +5,12 @@ import Swal from "sweetalert2";
 import Modal from "src/components/Modal/Modal";
 import Loading from "src/components/Loading/Loading";
 import axiosInstance from "src/js/Axios";
-import { getUsers, deleteUser, createUser, updateUser, updateLoading } from "src/actions";
 import { formatDate, closeModal } from "src/js/Helpers";
 
 import { IUser, State } from "src/interfaces";
 import { AnyAction } from "redux";
+import { updateLoading } from "src/redux/actions";
+import { createUser, deleteUser, getUsers, updateUser } from "src/redux/actions/users";
 
 function Users(props: any) {
 	const { loading, users } = props as State;
